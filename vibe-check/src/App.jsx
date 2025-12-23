@@ -1,35 +1,19 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useGeolocation } from './hooks/useGeolocation';
+import MapDisplay from './components/MapDisplay';
 
 function App() {
-  const [count, setCount] = useState(0)
+  const { coords, loading, error } = useGeolocation();
+
+  if (loading) return <div>Locating you...</div>;
+  if (error) return <div>Error: {error}. Please enable location.</div>;
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <div className="app-container">
+      <h1>Mood Mapper</h1>
+      {/* Default to NYC if coords fail, otherwise use user coords */}
+      <MapDisplay center={coords || { lat: 40.7128, lng: -74.0060 }} />
+    </div>
+  );
 }
 
 export default App
