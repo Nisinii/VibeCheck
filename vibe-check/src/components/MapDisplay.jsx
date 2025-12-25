@@ -1,56 +1,51 @@
 import { useEffect, useRef } from 'react';
-
-// Notice we don't import the "Loader" class anymore
 import { setOptions, importLibrary } from '@googlemaps/js-api-loader';
 
-const MapDisplay = ({ center }) => {
+const MapDisplay = ({ center, mood, onPlacesFound }) => {
   const mapRef = useRef(null);
 
   useEffect(() => {
-    // 1. Set your options globally (functional API)
-    setOptions({
-      apiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
-      version: "weekly",
-    });
+    setOptions({ apiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY, version: "weekly" });
 
     const initMap = async () => {
-      try {
-        // 2. Import libraries functionally
-        const { Map } = await importLibrary("maps");
-        const { AdvancedMarkerElement } = await importLibrary("marker");
+      const { Map } = await importLibrary("maps");
+      const { PlacesService } = await importLibrary("places");
 
-        const map = new Map(mapRef.current, {
-          center: center,
-          zoom: 14,
-          mapId: "DEMO_MAP_ID", 
-          disableDefaultUI: true,
-        });
+      const map = new Map(mapRef.current, {
+        center: center,
+        zoom: 14,
+        mapId: "DEMO_MAP_ID",
+        disableDefaultUI: true,
+      });
 
-        new AdvancedMarkerElement({
-          map: map,
-          position: center,
-          title: "You are here",
-        });
-        
-      } catch (error) {
-        console.error("Maps failed to load:", error);
-      }
+      // Define what we are looking for based on the mood
+      const moodKeywords = {
+        work: 'cafe wifi quiet',
+        date: 'romantic restaurant wine bar',
+        quick: 'takeaway fast food',
+        budget: 'cheap eats diner'
+      };
+
+      const request = {
+        location: center,
+        radius: '2000', // 2km
+        keyword: moodKeywords[mood] || 'restaurant'
+      };
+
+      const service = new PlacesService(map);
+      
+      service.nearbySearch(request, (results, status) => {
+        if (status === google.maps.places.PlacesServiceStatus.OK && results) {
+          // Send the live results back up to App.jsx
+          onPlacesFound(results);
+        }
+      });
     };
 
-    initMap();
-  }, [center]);
+    if (center) initMap();
+  }, [center, mood]); // Re-run when center or mood changes
 
-  return (
-    <div 
-      ref={mapRef} 
-      style={{ 
-        height: '450px', 
-        width: '100%', 
-        borderRadius: '16px',
-        overflow: 'hidden'
-      }} 
-    />
-  );
+  return <div ref={mapRef} className="w-full h-full" />;
 };
 
 export default MapDisplay;
