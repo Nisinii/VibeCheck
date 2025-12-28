@@ -16,3 +16,5 @@ export const MOODS = [
   { id: 'quick bite', label: 'Quick Bite', icon: Zap, color: 'text-amber-500', types: ['fast_food_restaurant', 'sandwich_shop'] },
   { id: 'budget', label: 'Accessible', icon: DollarSign, color: 'text-emerald-600', types: ['restaurant'] },
 ];
+
+export const GEMINI_API_KEY = "AIzaSyBCN_0Pq_194Vrrnwj50uGmC8a5gCfff0E";
