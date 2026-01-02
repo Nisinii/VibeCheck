@@ -62,7 +62,7 @@ const Footer = () => {
           <div className="md:col-span-2 lg:col-span-2">
             <h4 className="font-bold text-slate-900 mb-6">Company</h4>
             <ul className="space-y-4 text-sm font-medium text-slate-500">
-              <li><FooterLink>About Us</FooterLink></li>
+              <li><a href="/developer" className="hover:text-indigo-600 transition-colors">About the Dev</a></li>
               <li><FooterLink>API Access</FooterLink></li>
               <li><FooterLink>Careers</FooterLink></li>
               <li><FooterLink>Contact</FooterLink></li>
