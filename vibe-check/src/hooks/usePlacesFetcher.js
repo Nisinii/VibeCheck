@@ -1,7 +1,7 @@
 import { useState, useCallback, useRef } from 'react';
 import { MOODS } from '../utils/constants';
 
-// Keep your exact vibe calculation logic
+// Keep vibe logic
 const calculateVibe = (reviewCount, isOpen) => {
   if (!isOpen) return { label: "Dormant", color: "text-slate-400", bg: "bg-slate-100" };
   if (reviewCount > 1000) return { label: "Electric", color: "text-purple-600", bg: "bg-purple-50" };
@@ -16,9 +16,11 @@ export const usePlacesFetcher = (apiReady, activeMood, searchQuery, radius = 2, 
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   
-  // Use Ref to prevent infinite loops caused by object identity changes
-  const [userLocation, setUserLocation] = useState(null);
+  // Use Ref to prevent infinite loops caused by location object changing
   const locationRef = useRef(null);
+
+  // STABILIZE DEPENDENCIES
+  const budgetKey = (budget || []).join(',');
 
   const fetchPlaces = useCallback(async () => {
     if (!apiReady || !window.google?.maps) return;
@@ -29,7 +31,7 @@ export const usePlacesFetcher = (apiReady, activeMood, searchQuery, radius = 2, 
     try {
       const { Place, SearchNearbyRankPreference } = await window.google.maps.importLibrary("places");
       
-      // 1. Get Location (Only if we don't have it yet)
+      // 1. Get Location (Stabilized with Ref)
       let location = locationRef.current;
       if (!location) {
         try {
@@ -37,44 +39,36 @@ export const usePlacesFetcher = (apiReady, activeMood, searchQuery, radius = 2, 
             navigator.geolocation.getCurrentPosition(res, rej, { timeout: 6000 })
           );
           location = { lat: pos.coords.latitude, lng: pos.coords.longitude };
-          // Update ref and state
-          locationRef.current = location;
-          setUserLocation(location);
+          locationRef.current = location; 
         } catch (e) {
           console.warn("Geolocation failed, defaulting to Stockholm");
           location = { lat: 59.334591, lng: 18.063240 }; 
           locationRef.current = location;
-          setUserLocation(location);
         }
       }
 
       let results = [];
       
-      // STRATEGY A: Semantic Search (User typed text)
+      // STRATEGY A: Semantic Search
       if (searchQuery && searchQuery.trim().length > 0) {
         const request = {
           textQuery: searchQuery,
-          locationBias: {
-            center: location,
-            radius: radius * 1000, 
-          },
-          openNow: true,
+          locationBias: { center: location, radius: radius * 1000 },
+          isOpenNow: true, // <--- FIXED: Changed from 'openNow' to 'isOpenNow'
           fields: ['id', 'displayName', 'types', 'rating', 'userRatingCount', 'priceLevel', 'photos', 'businessStatus', 'primaryTypeDisplayName', 'location', 'regularOpeningHours'],
         };
         const { places: searchResults } = await Place.searchByText(request);
         results = searchResults;
       } 
-      // STRATEGY B: Mood Browse (Category Selection)
+      // STRATEGY B: Mood Browse
       else {
         const mood = MOODS.find(m => m.id === activeMood) || MOODS[0];
         const request = {
           includedPrimaryTypes: mood.types,
-          locationRestriction: { 
-            center: location, 
-            radius: radius * 1000 
-          },
+          locationRestriction: { center: location, radius: radius * 1000 },
           maxResultCount: 20,
           rankPreference: SearchNearbyRankPreference.POPULARITY,
+          // isOpenNow: true, // Optional: Uncomment if you only want open places in browse mode too
           fields: ['id', 'displayName', 'types', 'rating', 'userRatingCount', 'priceLevel', 'photos', 'businessStatus', 'primaryTypeDisplayName', 'location', 'regularOpeningHours'],
         };
         const { places: nearbyResults } = await Place.searchNearby(request);
@@ -87,7 +81,6 @@ export const usePlacesFetcher = (apiReady, activeMood, searchQuery, radius = 2, 
           const isOpen = p.businessStatus === 'OPERATIONAL';
           const vibe = calculateVibe(p.userRatingCount || 0, isOpen);
           
-          // Parse Price
           let rawPrice = p.priceLevel;
           let parsedPrice = 2; 
           if (typeof rawPrice === 'string') {
@@ -95,9 +88,7 @@ export const usePlacesFetcher = (apiReady, activeMood, searchQuery, radius = 2, 
              else if (rawPrice.includes('MODERATE')) parsedPrice = 2;
              else if (rawPrice.includes('EXPENSIVE')) parsedPrice = 3;
              else if (rawPrice.includes('VERY_EXPENSIVE')) parsedPrice = 4;
-          } else if (typeof rawPrice === 'number') {
-             parsedPrice = rawPrice;
-          }
+          } else if (typeof rawPrice === 'number') parsedPrice = rawPrice;
 
           return {
             id: p.id,
@@ -131,7 +122,6 @@ export const usePlacesFetcher = (apiReady, activeMood, searchQuery, radius = 2, 
       }
 
     } catch (err) {
-      console.warn("API Failure", err);
       if (err.message && err.message.includes("ZERO_RESULTS")) {
         setPlaces([]);
       } else {
@@ -140,7 +130,7 @@ export const usePlacesFetcher = (apiReady, activeMood, searchQuery, radius = 2, 
     } finally {
       setIsLoading(false);
     }
-  }, [apiReady, activeMood, searchQuery, radius, budget]); // userLocation removed from dependency array
+  }, [apiReady, activeMood, searchQuery, radius, budgetKey]);
 
-  return { places, isLoading, error, fetchPlaces, userLocation };
+  return { places, isLoading, error, fetchPlaces, userLocation: locationRef.current };
 };
