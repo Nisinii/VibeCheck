@@ -1,13 +1,13 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+// FIX: Added 'Zap' to the import list below
 import { 
   ArrowLeft, Github, Linkedin, Globe, 
-  Code2, Database, Map, Sparkles 
+  Code2, Database, Map, Sparkles, Zap 
 } from 'lucide-react';
 import Footer from '../components/Footer';
 
-// PLACEHOLDER IMAGE: Replace this with a path to your actual photo in /public or src/assets
-// e.g., import profileImg from '../assets/my-profile-pic.jpg';
+// PLACEHOLDER IMAGE: Replace this with your own photo later
 const profileImg = "https://images.unsplash.com/photo-1568602471122-7832951cc4c5?auto=format&fit=crop&q=80&w=800&h=800";
 
 const DeveloperPage = () => {
@@ -27,7 +27,7 @@ const DeveloperPage = () => {
 
       <main className="max-w-5xl mx-auto px-6 md:px-12 py-24 md:py-32 relative">
         
-        {/* SECTION 1: THE DEVELOPER (Split Layout) */}
+        {/* SECTION 1: THE DEVELOPER */}
         <section className="grid grid-cols-1 md:grid-cols-12 gap-12 items-center mb-32">
           
           {/* Text Content */}
@@ -38,7 +38,7 @@ const DeveloperPage = () => {
             
             <div>
               <h1 className="text-5xl md:text-7xl font-black tracking-tight mb-4">
-                Hi, I'm <span className="text-indigo-600">[Your Name]</span>.
+                Hi, I'm <span className="text-indigo-600">John Doe</span>.
               </h1>
               <h2 className="text-2xl md:text-3xl text-slate-500 font-medium">
                 Frontend Engineer & UI Designer.
@@ -48,20 +48,19 @@ const DeveloperPage = () => {
             <p className="text-slate-600 leading-relaxed text-lg max-w-2xl">
               I build pixel-perfect, user-centric digital experiences. I'm obsessed with clean code, modern aesthetics, and finding the intersection between complex data and intuitive design.
               <br /><br />
-              Based in [Your Location]. Always building.
+              Based in Stockholm. Always building.
             </p>
 
             {/* Social Links */}
             <div className="flex flex-wrap gap-4 pt-2">
-              <SocialButton icon={Github} link="https://github.com/[yourusername]" label="GitHub" />
-              <SocialButton icon={Linkedin} link="https://linkedin.com/in/[yourusername]" label="LinkedIn" />
-              <SocialButton icon={Globe} link="https://[yourportfolio].com" label="Portfolio" />
+              <SocialButton icon={Github} link="#" label="GitHub" />
+              <SocialButton icon={Linkedin} link="#" label="LinkedIn" />
+              <SocialButton icon={Globe} link="#" label="Portfolio" />
             </div>
           </div>
 
           {/* Image */}
           <div className="md:col-span-5 order-1 md:order-2 relative group">
-            {/* Decorative blob background */}
             <div className="absolute inset-0 bg-gradient-to-tr from-indigo-600 to-purple-400 rounded-[3rem] rotate-6 scale-105 opacity-20 blur-2xl group-hover:rotate-12 group-hover:scale-110 transition-transform duration-700"></div>
             <img 
               src={profileImg} 
@@ -72,7 +71,7 @@ const DeveloperPage = () => {
         </section>
 
 
-        {/* SECTION 2: THE PROJECT (Card Layout) */}
+        {/* SECTION 2: THE PROJECT */}
         <section>
            <div className="text-center mb-16">
              <h3 className="text-3xl font-black mb-4">About The Project.</h3>
@@ -82,10 +81,10 @@ const DeveloperPage = () => {
            </div>
 
            <div className="bg-white border border-slate-200 rounded-[3rem] p-8 md:p-16 shadow-xl shadow-slate-200/50 relative overflow-hidden">
-             {/* Decorative background element */}
              <Sparkles className="absolute -right-12 -top-12 text-indigo-50 w-80 h-80 -rotate-12 pointer-events-none" />
              
              <div className="relative z-10 grid grid-cols-1 md:grid-cols-3 gap-8">
+                 {/* This was likely where the error occurred because Zap wasn't imported */}
                  <TechCard 
                    icon={Zap} 
                    title="Modern Stack" 
@@ -111,8 +110,7 @@ const DeveloperPage = () => {
   );
 };
 
-// --- Helper Components for this page ---
-
+// Helper Components
 const SocialButton = ({ icon: Icon, link, label }) => (
   <a 
     href={link} 
