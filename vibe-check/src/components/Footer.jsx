@@ -1,10 +1,29 @@
-import React from 'react';
-import { Zap, Github, Twitter, Instagram, ArrowUpRight } from 'lucide-react';
+import React, { useState } from 'react';
+import { Zap, Github, Twitter, Instagram, ArrowUpRight, Check, Loader2 } from 'lucide-react';
 
 const Footer = () => {
+  // State for the newsletter interaction
+  const [email, setEmail] = useState('');
+  const [status, setStatus] = useState('idle'); // 'idle' | 'loading' | 'success'
+
+  const handleSubscribe = (e) => {
+    e.preventDefault();
+    if (!email) return;
+
+    // Simulate an API call
+    setStatus('loading');
+    setTimeout(() => {
+      setStatus('success');
+      setEmail('');
+      // NOTE: To actually save this, you would need a backend (like Firebase or Supabase).
+      // Example: await db.collection('subscribers').add({ email });
+    }, 1500);
+  };
+
   return (
-    <footer className="bg-white border-t border-slate-200 pt-20 pb-10">
-      <div className="max-w-[1800px] mx-auto px-4 md:px-12 2xl:px-24">
+    <footer className="bg-white border-t border-slate-200 pt-20 pb-10 w-full relative z-10">
+      {/* 1. MATCHING MARGINS: Exact same classes as Hero.jsx */}
+      <div className="px-4 md:px-12 2xl:px-24 w-full mx-auto">
         
         {/* TOP SECTION: Grid Layout */}
         <div className="grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-8 mb-16">
@@ -50,20 +69,49 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Column 4: Newsletter (Visual Only) */}
+          {/* Column 4: Newsletter Interaction */}
           <div className="md:col-span-4 lg:col-span-3">
             <h4 className="font-bold text-slate-900 mb-4">Stay in the loop</h4>
             <p className="text-slate-500 text-sm mb-4">Get the latest vibe reports sent to your inbox.</p>
-            <div className="flex gap-2">
-              <input 
-                type="email" 
-                placeholder="Enter email address" 
-                className="bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm w-full focus:outline-none focus:border-indigo-500 transition-colors"
-              />
-              <button className="bg-slate-900 text-white px-4 py-2.5 rounded-xl text-sm font-bold hover:bg-indigo-600 transition-colors">
-                Join
+            
+            <form onSubmit={handleSubscribe} className="flex gap-2">
+              <div className="relative w-full">
+                <input 
+                  type="email" 
+                  placeholder="Enter email address" 
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  disabled={status === 'success'}
+                  className="bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm w-full focus:outline-none focus:border-indigo-500 transition-colors disabled:bg-slate-100 disabled:text-slate-400"
+                />
+                {status === 'success' && (
+                  <Check className="absolute right-3 top-2.5 text-green-500 w-5 h-5 animate-in zoom-in" />
+                )}
+              </div>
+              
+              <button 
+                type="submit"
+                disabled={status === 'loading' || status === 'success'}
+                className={`px-4 py-2.5 rounded-xl text-sm font-bold transition-all min-w-[80px] flex justify-center items-center ${
+                  status === 'success' 
+                    ? 'bg-green-100 text-green-700' 
+                    : 'bg-slate-900 text-white hover:bg-indigo-600'
+                }`}
+              >
+                {status === 'loading' ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : status === 'success' ? (
+                  "Joined"
+                ) : (
+                  "Join"
+                )}
               </button>
-            </div>
+            </form>
+            {status === 'success' && (
+              <p className="text-xs text-green-600 mt-2 font-bold animate-in slide-in-from-top-1">
+                Welcome to the frequency! ⚡
+              </p>
+            )}
           </div>
 
         </div>
@@ -84,7 +132,7 @@ const Footer = () => {
   );
 };
 
-// Helper Components for cleaner code
+// Helper Components
 const SocialLink = ({ icon: Icon, href }) => (
   <a 
     href={href} 
