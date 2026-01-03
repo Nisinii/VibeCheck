@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Loader2, AlertCircle, Bookmark } from 'lucide-react';
+import { Loader2, AlertCircle, Bookmark, Zap } from 'lucide-react';
 
 // Hooks
 import { useGoogleMapsScript } from '../hooks/useGoogleMaps';
@@ -9,7 +9,7 @@ import { useFavorites } from '../hooks/useFavorites';
 
 // Components
 import NavBar from '../components/NavBar';
-import Hero from '../components/Hero'; // <--- You need to update Hero.jsx separately (step 3)
+import Hero from '../components/Hero'; 
 import ControlBar from '../components/ControlBar';
 import PlaceCard from '../components/PlaceCard';
 import MapVisualizer from '../components/MapVisualizer';
@@ -22,27 +22,20 @@ const Home = () => {
   // --- STATE ---
   const [activeMood, setActiveMood] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
-  // NEW: Budget State
   const [budget, setBudget] = useState([]); 
 
   const [viewMode, setViewMode] = useState('grid');
   const [isScrolled, setIsScrolled] = useState(false);
-  const [radius, setRadius] = useState(5);
+  const [radius, setRadius] = useState(5); 
   
-  // Pagination State
   const [currentPage, setCurrentPage] = useState(1);
   const ITEMS_PER_PAGE = 20;
 
   // --- HOOKS ---
   const { apiReady, error: scriptError } = useGoogleMapsScript(API_KEY);
   
-  // Updated Hook Call with Budget
   const { places, isLoading, error: fetchError, fetchPlaces, userLocation } = usePlacesFetcher(
-    apiReady, 
-    activeMood, 
-    searchQuery, 
-    radius,
-    budget // Pass budget here
+    apiReady, activeMood, searchQuery, radius, budget 
   );
 
   const { favorites, toggleFavorite, isFavorite } = useFavorites();
@@ -51,9 +44,7 @@ const Home = () => {
   // --- LOGIC ---
   const allPlaces = showFavorites ? favorites : places;
 
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [places, showFavorites, activeMood, searchQuery]);
+  useEffect(() => { setCurrentPage(1); }, [places, showFavorites, activeMood, searchQuery, budget]);
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 20);
@@ -61,14 +52,11 @@ const Home = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // API Fetcher Debounce
   useEffect(() => {
     if (!apiReady || showFavorites) return; 
-    const timer = setTimeout(() => {
-      fetchPlaces();
-    }, 600);
+    const timer = setTimeout(() => { fetchPlaces(); }, 600);
     return () => clearTimeout(timer);
-  }, [apiReady, activeMood, searchQuery, radius, budget, fetchPlaces, showFavorites]); // Added budget dependency
+  }, [apiReady, activeMood, searchQuery, radius, budget, fetchPlaces, showFavorites]); 
 
   const totalPages = Math.ceil(allPlaces.length / ITEMS_PER_PAGE);
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
@@ -80,39 +68,56 @@ const Home = () => {
 
   // --- RENDER ---
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 font-sans selection:bg-indigo-100">
-      <div className="fixed top-0 inset-x-0 h-[50vh] bg-gradient-to-b from-indigo-50/50 to-transparent pointer-events-none" />
+    <div className="min-h-screen bg-black text-zinc-100 font-sans selection:bg-indigo-500 selection:text-white overflow-x-hidden">
+      
+      {/* 1. BACKGROUND IMAGE: Dark Atmospheric Bar/Restaurant Vibe */}
+      <div className="fixed inset-0 z-0 pointer-events-none">
+         <img 
+           src="https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?q=80&w=2670&auto=format&fit=crop" 
+           alt="Background" 
+           className="w-full h-full object-cover opacity-60" 
+         />
+         {/* Gradient Overlay for Readability */}
+         <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/80 to-black"></div>
+      </div>
 
       <NavBar apiReady={apiReady} isScrolled={isScrolled} />
 
-      {/* Pass Budget props to Hero */}
+      {/* HERO SECTION */}
       <Hero 
-        searchQuery={searchQuery} 
-        setSearchQuery={setSearchQuery} 
-        activeMood={activeMood} 
-        setActiveMood={(mood) => {
-          setActiveMood(mood);
-          setShowFavorites(false);
-        }}
-        radius={radius}
-        setRadius={setRadius}
-        budget={budget}          
-        setBudget={setBudget}    
+        searchQuery={searchQuery} setSearchQuery={setSearchQuery} 
+        activeMood={activeMood} setActiveMood={(mood) => { setActiveMood(mood); setShowFavorites(false); }}
+        radius={radius} setRadius={setRadius}
+        budget={budget} setBudget={setBudget}    
       />
 
-      <div className="max-w-[1800px] mx-auto px-4 md:px-12 2xl:px-24 mb-8 flex gap-4">
-        <button 
-          onClick={() => setShowFavorites(false)}
-          className={`px-6 py-2 rounded-full text-xs font-black uppercase tracking-widest border transition-all ${!showFavorites ? 'bg-slate-900 text-white border-slate-900' : 'bg-white text-slate-400 border-slate-200 hover:border-slate-900'}`}
-        >
-          Live Feed
-        </button>
-        <button 
-          onClick={() => setShowFavorites(true)}
-          className={`px-6 py-2 rounded-full text-xs font-black uppercase tracking-widest border transition-all flex items-center gap-2 ${showFavorites ? 'bg-rose-500 text-white border-rose-500' : 'bg-white text-slate-400 border-slate-200 hover:border-rose-500 hover:text-rose-500'}`}
-        >
-          <Bookmark className="w-3 h-3" /> Saved Collection ({favorites.length})
-        </button>
+      {/* TOGGLE BUTTONS */}
+      <div className="relative z-10 w-full max-w-[2000px] mx-auto px-4 md:px-8 mb-10">
+        <div className="flex gap-4">
+          <button 
+            onClick={() => setShowFavorites(false)}
+            className={`px-8 py-3 rounded-full text-xs font-black uppercase tracking-widest transition-all duration-300 border flex items-center gap-2 backdrop-blur-md ${
+              !showFavorites 
+                ? 'bg-white text-black border-white shadow-[0_0_20px_rgba(255,255,255,0.4)] scale-105' 
+                : 'bg-black/40 text-zinc-500 border-white/10 hover:border-white/50 hover:text-white hover:bg-white/5'
+            }`}
+          >
+            <Zap size={14} className={!showFavorites ? 'fill-black' : ''} />
+            Live Feed
+          </button>
+          
+          <button 
+            onClick={() => setShowFavorites(true)}
+            className={`px-8 py-3 rounded-full text-xs font-black uppercase tracking-widest transition-all duration-300 border flex items-center gap-2 backdrop-blur-md ${
+              showFavorites 
+                ? 'bg-white text-black border-white shadow-[0_0_20px_rgba(255,255,255,0.4)] scale-105' 
+                : 'bg-black/40 text-zinc-500 border-white/10 hover:border-white/50 hover:text-white hover:bg-white/5'
+            }`}
+          >
+            <Bookmark size={14} className={showFavorites ? 'fill-black' : ''} /> 
+            Collection <span className="opacity-50 ml-1">({favorites.length})</span>
+          </button>
+        </div>
       </div>
 
       <ControlBar 
@@ -120,46 +125,70 @@ const Home = () => {
         resultCount={allPlaces.length} 
         viewMode={viewMode} 
         setViewMode={setViewMode}
-        page={currentPage}
-        totalPages={totalPages}
-        onNextPage={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
-        onPrevPage={() => setCurrentPage(p => Math.max(1, p - 1))}
       />
 
-      <main className="relative z-10 px-4 md:px-12 2xl:px-24 w-full mx-auto pb-20 md:pb-32 min-h-[500px]">
+      {/* MAIN GRID */}
+      <main className="relative z-10 w-full max-w-[2000px] mx-auto px-4 md:px-8 pb-20 md:pb-32 min-h-[500px]">
+        
         {isLoading && !showFavorites ? (
-          <div className="py-40 flex flex-col items-center justify-center text-slate-400">
-            <Loader2 className="w-12 h-12 animate-spin mb-4 text-indigo-600" />
-            <p className="font-bold uppercase tracking-[0.2em] text-[10px]">Processing Telemetry...</p>
+          <div className="py-40 flex flex-col items-center justify-center text-zinc-500">
+            <Loader2 className="w-12 h-12 animate-spin mb-4 text-white" />
+            <p className="font-bold uppercase tracking-[0.2em] text-[10px]">Syncing Satellites...</p>
           </div>
         ) : (scriptError || fetchError) && !showFavorites ? (
-           <div className="py-20 text-center text-rose-500 max-w-md mx-auto">
-             <div className="bg-rose-50 p-8 rounded-[2.5rem] border border-rose-100 shadow-xl">
+           <div className="py-20 text-center text-rose-400 max-w-md mx-auto">
+             <div className="bg-rose-950/30 p-8 rounded-[2.5rem] border border-rose-900/50 backdrop-blur-sm">
                <AlertCircle className="w-12 h-12 mx-auto mb-4" />
-               <p className="font-black text-sm uppercase tracking-widest mb-3 text-rose-700">Protocol Disruption</p>
-               <p className="text-xs opacity-80 mb-6 leading-relaxed italic">"{scriptError || fetchError}"</p>
-               <button onClick={() => window.location.reload()} className="px-8 py-3 bg-rose-500 text-white rounded-full text-[10px] font-black uppercase tracking-widest shadow-lg hover:bg-rose-600 transition-colors">Reconnect Engine</button>
+               <p className="font-black text-sm uppercase tracking-widest mb-3">Signal Lost</p>
+               <button onClick={() => window.location.reload()} className="px-8 py-3 bg-rose-600 text-white rounded-full text-[10px] font-bold uppercase tracking-widest hover:bg-rose-500 transition-colors">Re-establish Link</button>
              </div>
            </div>
         ) : viewMode === 'map' ? (
-          <div className="h-[600px] w-full">
+          <div className="h-[600px] w-full rounded-[2.5rem] overflow-hidden border border-zinc-800 shadow-2xl">
             <MapVisualizer places={allPlaces} userLocation={userLocation} />
           </div>
         ) : displayedPlaces.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6 md:gap-10 animate-in fade-in slide-in-from-bottom-4 duration-500">
-            {displayedPlaces.map((place) => (
-              <PlaceCard 
-                key={place.id} 
-                place={place} 
-                onClick={handlePlaceClick} 
-                onToggleFavorite={toggleFavorite} 
-                isFavorite={isFavorite(place.id)} 
-              />
-            ))}
-          </div>
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6 md:gap-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+              {displayedPlaces.map((place) => (
+                <PlaceCard 
+                  key={place.id || place.place_id} 
+                  place={place} 
+                  onClick={handlePlaceClick} 
+                  onToggleFavorite={toggleFavorite} 
+                  isFavorite={isFavorite(place.id || place.place_id)} 
+                />
+              ))}
+            </div>
+
+            {/* Pagination */}
+            {totalPages > 1 && (
+              <div className="flex justify-center gap-4 mt-12">
+                <button 
+                  onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                  disabled={currentPage === 1}
+                  className="px-6 py-2 rounded-full border border-zinc-800 text-zinc-400 text-xs font-bold uppercase hover:bg-white hover:text-black disabled:opacity-30 transition-all"
+                >
+                  Previous
+                </button>
+                <span className="flex items-center text-xs font-bold text-zinc-500">
+                  Page {currentPage} / {totalPages}
+                </span>
+                <button 
+                  onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                  disabled={currentPage === totalPages}
+                  className="px-6 py-2 rounded-full border border-zinc-800 text-zinc-400 text-xs font-bold uppercase hover:bg-white hover:text-black disabled:opacity-30 transition-all"
+                >
+                  Next
+                </button>
+              </div>
+            )}
+          </>
         ) : (
-          <div className="py-40 text-center italic text-slate-400">
-            {showFavorites ? "No saved places yet." : "Zero frequencies detected in search radius."}
+          <div className="py-40 text-center">
+            <p className="text-zinc-600 italic font-light text-lg">
+              {showFavorites ? "Your collection is empty." : "No signals found in this sector."}
+            </p>
           </div>
         )}
       </main>

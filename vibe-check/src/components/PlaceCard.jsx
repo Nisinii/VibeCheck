@@ -24,7 +24,7 @@ const PlaceCard = ({ place, onClick, onToggleFavorite, isFavorite }) => {
   return (
     <div 
       onClick={() => onClick(place)}
-      className="group cursor-pointer bg-white border border-slate-200 rounded-[2.5rem] overflow-hidden shadow-sm hover:shadow-2xl hover:shadow-indigo-500/10 transition-all duration-500 relative"
+      className="group cursor-pointer bg-white border-slate-200 rounded-[2.5rem] overflow-hidden shadow-sm hover:shadow-2xl hover:shadow-indigo-500/10 transition-all duration-500 relative"
     >
       <div className="relative h-72 overflow-hidden bg-slate-100">
         <img 
