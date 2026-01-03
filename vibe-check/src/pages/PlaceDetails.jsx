@@ -3,13 +3,13 @@ import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import { 
   Star, MapPin, Phone, Globe as GlobeIcon, Clock, 
   Share2, Bookmark, ArrowUpRight, 
-  MessageSquare, Zap, ArrowLeft, Check
+  MessageSquare, Zap, ArrowLeft, Check, Loader2
 } from 'lucide-react';
 
 // Hooks & Utils
 import { useGoogleMapsScript } from '../hooks/useGoogleMaps';
 import { useFavorites } from '../hooks/useFavorites';
-import { generateVibeSummary } from '../utils/ai'; // <--- IMPORT YOUR FILE HERE
+import { generateVibeSummary } from '../utils/ai'; 
 import { API_KEY } from '../utils/constants';
 
 // Helper for static tags
@@ -87,7 +87,6 @@ export default function PlaceDetails() {
     if (place?.reviews?.length > 0 && !geminiSummary && !isAnalyzing) {
       const runVibeCheck = async () => {
         setIsAnalyzing(true);
-        // Call your function from ai.js
         const summary = await generateVibeSummary(place.name, place.reviews);
         setGeminiSummary(summary);
         setIsAnalyzing(false);
@@ -130,26 +129,26 @@ export default function PlaceDetails() {
     if (place?.photos?.[index]?.getUrl) {
       return place.photos[index].getUrl({ maxWidth: 1200, maxHeight: 800 });
     }
-    return "/api/placeholder/800/600";
+    return "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&q=80&w=1200"; // Dark fallback
   };
 
   // --- RENDER ---
   
   if (loading && !place) return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
+    <div className="min-h-screen flex items-center justify-center bg-black">
       <div className="animate-pulse flex flex-col items-center">
-        <div className="h-12 w-12 bg-gray-300 rounded-full mb-4"></div>
-        <div className="text-gray-400 font-medium">Checking the vibe...</div>
+        <Loader2 className="w-12 h-12 text-indigo-500 animate-spin mb-4" />
+        <div className="text-zinc-500 font-bold uppercase tracking-widest text-xs">Syncing Satellites...</div>
       </div>
     </div>
   );
 
   if (error || (!loading && !place)) return (
-    <div className="min-h-screen flex items-center justify-center text-red-500">
+    <div className="min-h-screen flex items-center justify-center bg-black text-rose-500">
       <div className="text-center">
-        <p className="text-xl font-bold mb-4">{error || "Place not found"}</p>
-        <button onClick={() => navigate('/')} className="px-4 py-2 bg-black text-white rounded-lg">
-          Go Home
+        <p className="text-xl font-bold mb-4">{error || "Signal Lost"}</p>
+        <button onClick={() => navigate('/')} className="px-6 py-2 bg-white text-black font-bold rounded-full hover:bg-zinc-200">
+          Return to Base
         </button>
       </div>
     </div>
@@ -158,24 +157,25 @@ export default function PlaceDetails() {
   const isFav = isFavorite(id);
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-20 font-sans text-gray-900">
+    // DARK THEME BASE
+    <div className="min-h-screen bg-black pb-20 font-sans text-zinc-100 selection:bg-indigo-500 selection:text-white">
       
       {/* 1. HERO SECTION */}
-      <div className="relative w-full h-96 bg-gray-200 group">
+      <div className="relative w-full h-96 bg-zinc-900 group">
         
         {/* BACK BUTTON */}
         <button 
           onClick={() => navigate(-1)} 
-          className="absolute top-6 left-6 z-20 bg-white/90 backdrop-blur-md p-3 rounded-full shadow-lg hover:bg-white transition-all duration-300 hover:scale-105 group-hover:opacity-100"
+          className="absolute top-6 left-6 z-20 bg-black/40 backdrop-blur-md border border-white/10 p-3 rounded-full hover:bg-white hover:text-black transition-all duration-300 hover:scale-105 group-hover:opacity-100"
         >
-          <ArrowLeft size={20} className="text-gray-800" />
+          <ArrowLeft size={20} className="text-white hover:text-black transition-colors" />
         </button>
 
         {/* PHOTO GRID */}
-        <div className="w-full h-full grid grid-cols-3 lg:grid-cols-4 grid-rows-2 gap-1 md:gap-2">
+        <div className="w-full h-full grid grid-cols-3 lg:grid-cols-4 grid-rows-2 gap-1 md:gap-2 opacity-90">
           <div className="col-span-2 row-span-2 relative cursor-pointer overflow-hidden">
             <img src={getPhotoUrl(0)} alt="Main" className="w-full h-full object-cover transition-transform duration-700 hover:scale-105" />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-60" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80" />
           </div>
           <div className="col-span-1 row-span-1 relative cursor-pointer overflow-hidden">
             <img src={getPhotoUrl(1)} alt="Detail 1" className="w-full h-full object-cover transition-transform duration-700 hover:scale-105" />
@@ -193,31 +193,33 @@ export default function PlaceDetails() {
       </div>
 
       {/* 2. MAIN CONTAINER */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8 relative z-10">
+      <div className="max-w-[1800px] mx-auto px-4 sm:px-6 lg:px-8 -mt-20 relative z-10">
         
-        {/* HEADER CARD */}
-        <div className="bg-white rounded-2xl shadow-xl p-6 mb-8 border border-gray-100">
+        {/* HEADER CARD - GLASS STYLE */}
+        <div className="bg-zinc-900/60 backdrop-blur-xl border border-white/10 rounded-[2rem] shadow-2xl p-6 md:p-8 mb-8">
           <div className="flex flex-col md:flex-row justify-between items-start gap-4">
             <div>
-              <h1 className="text-4xl font-extrabold tracking-tight text-gray-900 mb-2">{place.name}</h1>
-              <div className="flex items-center gap-4 text-sm text-gray-600 flex-wrap">
-                <div className="flex items-center gap-1">
+              <h1 className="text-4xl md:text-5xl font-black tracking-tighter text-white mb-3 drop-shadow-lg">{place.name}</h1>
+              <div className="flex items-center gap-4 text-sm text-zinc-400 flex-wrap">
+                <div className="flex items-center gap-2 bg-white/5 px-3 py-1.5 rounded-lg border border-white/5">
                   <div className="flex text-yellow-400">
-                    <span className="font-bold text-gray-900 mr-1 text-base">{place.rating || "N/A"}</span>
+                    <span className="font-bold text-white mr-2 text-base">{place.rating || "N/A"}</span>
                     {[...Array(5)].map((_, i) => (
-                      <Star key={i} size={18} fill={i < Math.round(place.rating || 0) ? "currentColor" : "none"} className={i < Math.round(place.rating || 0) ? "" : "text-gray-300"} />
+                      <Star key={i} size={16} fill={i < Math.round(place.rating || 0) ? "currentColor" : "none"} className={i < Math.round(place.rating || 0) ? "" : "text-zinc-600"} />
                     ))}
                   </div>
-                  <span className="text-gray-400">({place.user_ratings_total || 0} reviews)</span>
+                  <span className="text-zinc-500">({place.user_ratings_total || 0})</span>
                 </div>
-                <span>•</span>
-                <span>{place.price_level ? "$".repeat(place.price_level) : "$$"}</span>
-                <span>•</span>
+                
+                <span className="text-zinc-600">•</span>
+                <span className="font-medium text-white">{place.price_level ? "$".repeat(place.price_level) : "$$"}</span>
+                <span className="text-zinc-600">•</span>
+                
                 {place.opening_hours && (
                    place.opening_hours.isOpen && place.opening_hours.isOpen() ? (
-                    <span className="text-green-600 font-semibold bg-green-50 px-2 py-0.5 rounded-full text-xs">Open Now</span>
+                    <span className="text-emerald-400 font-bold bg-emerald-500/10 border border-emerald-500/20 px-3 py-1 rounded-full text-xs uppercase tracking-wide">Open Now</span>
                   ) : (
-                    <span className="text-red-500 font-semibold bg-red-50 px-2 py-0.5 rounded-full text-xs">Closed</span>
+                    <span className="text-rose-400 font-bold bg-rose-500/10 border border-rose-500/20 px-3 py-1 rounded-full text-xs uppercase tracking-wide">Closed</span>
                   )
                 )}
               </div>
@@ -225,20 +227,20 @@ export default function PlaceDetails() {
             
             <div className="flex gap-3">
               {place.url ? (
-                <a href={place.url} target="_blank" rel="noreferrer" className="flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-5 py-2.5 rounded-xl font-medium transition shadow-lg shadow-red-200">
-                  <Star size={18} /> Review
+                <a href={place.url} target="_blank" rel="noreferrer" className="flex items-center gap-2 bg-white text-black hover:bg-zinc-200 px-6 py-3 rounded-xl font-bold transition shadow-lg shadow-white/5 hover:scale-105">
+                  <ArrowUpRight size={18} /> Directions
                 </a>
               ) : (
-                 <button disabled className="flex items-center gap-2 bg-gray-300 text-white px-5 py-2.5 rounded-xl font-medium cursor-not-allowed">
-                   <Star size={18} /> Review
+                 <button disabled className="flex items-center gap-2 bg-zinc-800 text-zinc-500 px-6 py-3 rounded-xl font-bold cursor-not-allowed border border-white/5">
+                   <ArrowUpRight size={18} /> Directions
                  </button>
               )}
 
-              <button onClick={handleShare} className={`flex items-center gap-2 px-4 py-2.5 border rounded-xl transition-all duration-300 ${isCopied ? 'bg-green-50 border-green-200 text-green-700 w-32 justify-center' : 'border-gray-200 hover:bg-gray-50 text-gray-600'}`}>
-                {isCopied ? ( <><Check size={18} /> <span className="text-sm font-semibold">Copied</span></> ) : ( <Share2 size={20} /> )}
+              <button onClick={handleShare} className={`flex items-center gap-2 px-4 py-3 border rounded-xl transition-all duration-300 ${isCopied ? 'bg-emerald-500/20 border-emerald-500 text-emerald-400 w-32 justify-center' : 'bg-black/40 border-white/10 hover:bg-white/10 text-white'}`}>
+                {isCopied ? ( <><Check size={18} /> <span className="text-sm font-bold">Copied</span></> ) : ( <Share2 size={20} /> )}
               </button>
 
-              <button onClick={handleBookmark} className={`p-2.5 border rounded-xl transition-all duration-300 ${isFav ? 'bg-red-50 border-red-200 text-red-500 shadow-inner' : 'border-gray-200 hover:bg-gray-50 text-gray-600'}`}>
+              <button onClick={handleBookmark} className={`p-3 border rounded-xl transition-all duration-300 ${isFav ? 'bg-indigo-500/20 border-indigo-500 text-indigo-400 shadow-[0_0_15px_rgba(99,102,241,0.5)]' : 'bg-black/40 border-white/10 hover:bg-white/10 text-white'}`}>
                 <Bookmark size={20} fill={isFav ? "currentColor" : "none"}/>
               </button>
             </div>
@@ -251,71 +253,71 @@ export default function PlaceDetails() {
           {/* LEFT COLUMN (Main Content) */}
           <div className="lg:col-span-2 space-y-8">
             
-            {/* VIBE ANALYSIS CARD */}
-            <div className="bg-gradient-to-r from-indigo-50 via-white to-purple-50 rounded-2xl p-6 border border-indigo-100 relative overflow-hidden shadow-sm min-h-[160px]">
-              <div className="absolute top-0 right-0 p-4 opacity-5">
-                <Zap size={120} className="text-indigo-600" />
-              </div>
-              
-              <div className="flex items-center gap-3 mb-4 relative z-10">
-                <div className="p-2 bg-indigo-100 rounded-lg text-indigo-600">
-                  <Zap size={20} />
-                </div>
-                <span className="text-xs font-bold tracking-wider text-indigo-600 uppercase">Gemini Vibe Check</span>
+            {/* VIBE ANALYSIS CARD - Dark/Neon Gradient */}
+            <div className="relative overflow-hidden rounded-[2rem] p-1 bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-600 shadow-lg shadow-indigo-500/20">
+              <div className="relative bg-zinc-950 rounded-[1.8rem] p-8 h-full">
                 
-                {vibeTag && (
-                  <span className="ml-auto px-3 py-1 bg-indigo-600 text-white font-bold rounded-full text-xs uppercase tracking-wide shadow-md shadow-indigo-200">
-                    {vibeTag} Energy
-                  </span>
-                )}
+                <div className="flex items-center gap-3 mb-4 relative z-10">
+                  <div className="p-2 bg-indigo-500/20 rounded-lg text-indigo-400 border border-indigo-500/30">
+                    <Zap size={20} />
+                  </div>
+                  <span className="text-xs font-black tracking-widest text-white uppercase">AI Vibe Analysis</span>
+                  
+                  {vibeTag && (
+                    <span className="ml-auto px-3 py-1 bg-indigo-600 text-white font-bold rounded-full text-[10px] uppercase tracking-wide shadow-[0_0_10px_rgba(99,102,241,0.5)]">
+                      {vibeTag} Energy
+                    </span>
+                  )}
+                </div>
+                
+                <p className="text-lg md:text-xl font-medium text-zinc-200 leading-relaxed">
+                  {isAnalyzing ? (
+                    <span className="flex items-center gap-2 text-zinc-500 animate-pulse">
+                        <Loader2 className="animate-spin" size={18}/> analyzing signals...
+                    </span>
+                  ) : geminiSummary ? (
+                    `"${geminiSummary}"`
+                  ) : (
+                    <span className="text-zinc-500 text-base not-italic">No signals available to analyze.</span>
+                  )}
+                </p>
               </div>
-              
-              <p className="text-xl font-medium text-gray-800 italic relative z-10 leading-relaxed">
-                {isAnalyzing ? (
-                  <span className="animate-pulse text-gray-400">Reading recent reviews to analyze the vibe...</span>
-                ) : geminiSummary ? (
-                   `"${geminiSummary}"`
-                ) : (
-                   <span className="text-gray-400 text-base not-italic">No reviews available to analyze.</span>
-                )}
-              </p>
             </div>
 
             {/* REVIEWS LIST */}
             <div>
-              <h3 className="text-xl font-bold mb-6 flex items-center gap-2">
-                <MessageSquare size={20} /> 
-                Recent Reviews <span className="text-gray-400 font-normal text-lg">({place.reviews?.length || 0})</span>
+              <h3 className="text-sm font-black text-zinc-500 uppercase tracking-widest mb-6 flex items-center gap-2">
+                <MessageSquare size={16} /> Recent Reviews <span className="text-zinc-600">({place.reviews?.length || 0})</span>
               </h3>
               
-              <div className="space-y-6">
+              <div className="space-y-4">
                 {place.reviews && place.reviews.length > 0 ? (
                   place.reviews.map((review, index) => (
-                    <div key={index} className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition duration-200">
+                    <div key={index} className="bg-zinc-900/50 p-6 rounded-2xl border border-white/5 hover:border-white/10 hover:bg-zinc-900 transition duration-300">
                       <div className="flex justify-between items-start mb-4">
                         <div className="flex items-center gap-3">
                           <img 
-                            src={review.profile_photo_url} 
+                            src={review.profile_photo_url || "https://ui-avatars.com/api/?name=User&background=random&color=fff&background=3f3f46"} 
                             alt={review.author_name} 
-                            className="w-10 h-10 rounded-full border border-gray-200" 
+                            className="w-10 h-10 rounded-full border border-zinc-700" 
                           />
                           <div>
-                            <p className="font-bold text-gray-900 text-sm">{review.author_name}</p>
-                            <p className="text-xs text-gray-500">{review.relative_time_description}</p>
+                            <p className="font-bold text-white text-sm">{review.author_name}</p>
+                            <p className="text-xs text-zinc-500">{review.relative_time_description}</p>
                           </div>
                         </div>
-                        <div className="flex text-yellow-400">
+                        <div className="flex text-indigo-400">
                           {[...Array(5)].map((_, i) => (
-                            <Star key={i} size={14} fill={i < review.rating ? "currentColor" : "none"} className={i < review.rating ? "" : "text-gray-300"} />
+                            <Star key={i} size={12} fill={i < review.rating ? "currentColor" : "none"} className={i < review.rating ? "" : "text-zinc-700"} />
                           ))}
                         </div>
                       </div>
-                      <p className="text-gray-700 leading-relaxed text-sm">{review.text}</p>
+                      <p className="text-zinc-300 leading-relaxed text-sm">{review.text}</p>
                     </div>
                   ))
                 ) : (
-                   <div className="p-12 text-center bg-gray-50 rounded-2xl border border-dashed border-gray-200">
-                     <p className="text-gray-500">No detailed reviews available via API yet.</p>
+                   <div className="p-12 text-center border border-dashed border-zinc-800 rounded-2xl">
+                     <p className="text-zinc-500 text-sm">No transmissions found.</p>
                    </div>
                 )}
               </div>
@@ -325,9 +327,9 @@ export default function PlaceDetails() {
                   href={place.url}
                   target="_blank"
                   rel="noreferrer"
-                  className="mt-6 group flex items-center justify-center gap-2 w-full py-4 bg-white border border-gray-200 hover:bg-gray-50 hover:border-gray-300 rounded-xl font-medium text-gray-600 transition shadow-sm"
+                  className="mt-6 group flex items-center justify-center gap-2 w-full py-4 bg-zinc-900 border border-white/10 hover:bg-zinc-800 hover:border-white/20 rounded-xl font-bold text-zinc-400 hover:text-white transition shadow-sm"
                 >
-                  Read all reviews on Google Maps <ArrowUpRight size={18} className="group-hover:translate-x-1 transition-transform"/>
+                  Read all reviews on Google Maps <ArrowUpRight size={16} className="group-hover:translate-x-1 transition-transform"/>
                 </a>
               )}
             </div>
@@ -335,59 +337,68 @@ export default function PlaceDetails() {
 
           {/* RIGHT COLUMN (Sticky Sidebar) */}
           <div className="lg:col-span-1">
-            <div className="sticky top-6 space-y-6">
+            <div className="sticky top-24 space-y-6">
               
               {/* CONTACT INFO CARD */}
-              <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
-                <div className="p-6 space-y-5">
+              <div className="bg-zinc-900/50 backdrop-blur-md rounded-[2rem] border border-white/5 overflow-hidden p-6">
+                <h3 className="text-xs font-black text-zinc-500 uppercase tracking-widest mb-6">Data Points</h3>
+
+                <div className="space-y-5">
                   {place.website && (
-                    <a href={place.website} target="_blank" rel="noreferrer" className="flex items-start gap-4 hover:bg-gray-50 p-2 -mx-2 rounded-lg transition cursor-pointer group">
-                      <GlobeIcon className="text-gray-400 shrink-0 mt-1 group-hover:text-blue-600 transition-colors" size={20} />
+                    <a href={place.website} target="_blank" rel="noreferrer" className="flex items-center gap-4 group cursor-pointer">
+                      <div className="w-10 h-10 rounded-full bg-zinc-800 flex items-center justify-center shrink-0 group-hover:bg-indigo-600 group-hover:text-white transition-colors border border-white/5">
+                        <GlobeIcon size={18} className="text-zinc-400 group-hover:text-white" />
+                      </div>
                       <div className="overflow-hidden">
-                        <p className="font-medium text-blue-600 truncate group-hover:underline">Website</p>
-                        <p className="text-xs text-gray-400">Visit official site</p>
+                        <p className="font-bold text-white truncate group-hover:text-indigo-400 transition-colors">Website</p>
+                        <p className="text-xs text-zinc-500">Official Link</p>
                       </div>
                     </a>
                   )}
                   {place.formatted_phone_number && (
-                    <div className="flex items-start gap-4 hover:bg-gray-50 p-2 -mx-2 rounded-lg transition cursor-pointer group">
-                      <Phone className="text-gray-400 shrink-0 mt-1 group-hover:text-green-600 transition-colors" size={20} />
+                    <div className="flex items-center gap-4 group cursor-pointer">
+                      <div className="w-10 h-10 rounded-full bg-zinc-800 flex items-center justify-center shrink-0 group-hover:bg-emerald-600 group-hover:text-white transition-colors border border-white/5">
+                        <Phone size={18} className="text-zinc-400 group-hover:text-white" />
+                      </div>
                       <div>
-                        <p className="font-medium text-gray-900">{place.formatted_phone_number}</p>
-                        <p className="text-xs text-gray-400">Call business</p>
+                        <p className="font-bold text-white group-hover:text-emerald-400 transition-colors">{place.formatted_phone_number}</p>
+                        <p className="text-xs text-zinc-500">Voice Line</p>
                       </div>
                     </div>
                   )}
-                  <a href={place.url} target="_blank" rel="noreferrer" className="flex items-start gap-4 hover:bg-gray-50 p-2 -mx-2 rounded-lg transition cursor-pointer group">
-                    <MapPin className="text-gray-400 shrink-0 mt-1 group-hover:text-red-500 transition-colors" size={20} />
+                  <a href={place.url} target="_blank" rel="noreferrer" className="flex items-center gap-4 group cursor-pointer">
+                    <div className="w-10 h-10 rounded-full bg-zinc-800 flex items-center justify-center shrink-0 group-hover:bg-rose-600 group-hover:text-white transition-colors border border-white/5">
+                      <MapPin size={18} className="text-zinc-400 group-hover:text-white" />
+                    </div>
                     <div>
-                      <p className="font-medium text-gray-900">Get Directions</p>
-                      <p className="text-sm text-gray-500 mt-0.5">{place.formatted_address}</p>
+                      <p className="font-bold text-white group-hover:text-rose-400 transition-colors">Get Directions</p>
+                      <p className="text-xs text-zinc-500 truncate max-w-[200px]">{place.formatted_address}</p>
                     </div>
                   </a>
                 </div>
 
-                <a href={place.url} target="_blank" rel="noreferrer" className="block h-48 w-full bg-gray-100 relative group overflow-hidden border-t border-gray-100">
-                   <img src={getPhotoUrl(4) || getPhotoUrl(0)} alt="Location" className="w-full h-full object-cover grayscale opacity-50 group-hover:grayscale-0 group-hover:opacity-100 transition duration-500" />
-                   <div className="absolute inset-0 flex items-center justify-center">
-                     <span className="bg-white/90 backdrop-blur px-4 py-2 rounded-lg shadow-sm font-semibold text-sm flex items-center gap-2 group-hover:scale-105 transition-transform">
-                       <MapPin size={16} className="text-red-500"/> View on Map
-                     </span>
-                   </div>
+                <a href={place.url} target="_blank" rel="noreferrer" className="mt-8 block h-40 w-full rounded-2xl relative group overflow-hidden border border-white/10">
+                    <img src={getPhotoUrl(4) || getPhotoUrl(0)} alt="Location" className="w-full h-full object-cover grayscale opacity-50 group-hover:grayscale-0 group-hover:opacity-80 transition duration-500" />
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <span className="bg-white text-black px-4 py-2 rounded-full font-bold text-xs uppercase tracking-widest shadow-lg flex items-center gap-2 group-hover:scale-105 transition-transform">
+                        <MapPin size={14} className="text-rose-500"/> View Map
+                      </span>
+                    </div>
                 </a>
               </div>
               
-              <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-                <h3 className="font-bold flex items-center gap-2 mb-4 text-gray-900">
-                  <Clock size={18} /> Opening Hours
+              {/* HOURS CARD */}
+              <div className="bg-zinc-900/50 backdrop-blur-md rounded-[2rem] border border-white/5 p-6">
+                <h3 className="font-bold flex items-center gap-2 mb-4 text-white text-xs uppercase tracking-widest">
+                  <Clock size={16} className="text-zinc-500" /> Temporal Data
                 </h3>
                 <div className="space-y-3 text-sm">
                   {place.opening_hours?.weekday_text?.map((day, i) => (
-                    <div key={i} className="flex justify-between py-1 border-b border-gray-50 last:border-0 last:pb-0">
-                      <span className="text-gray-600 font-medium">{day.split(': ')[0]}</span>
-                      <span className="text-gray-900">{day.split(': ')[1]}</span>
+                    <div key={i} className="flex justify-between py-1 border-b border-white/5 last:border-0 last:pb-0">
+                      <span className="text-zinc-500 font-medium">{day.split(': ')[0]}</span>
+                      <span className="text-zinc-200 font-bold">{day.split(': ')[1]}</span>
                     </div>
-                  )) || <p className="text-gray-500 italic">Hours not available</p>}
+                  )) || <p className="text-zinc-500 italic">Hours not available</p>}
                 </div>
               </div>
 
