@@ -1,14 +1,20 @@
 import React from 'react';
 import { LayoutGrid, Map as MapIcon } from 'lucide-react';
 
+// ------------------------------------------------------------------
+// COMPONENT: CONTROL BAR
+// ------------------------------------------------------------------
+// Handles the view switching (Grid vs Map) for the main content area.
+// It is aligned to the right to sit nicely above the content grid.
+
 const ControlBar = ({ viewMode, setViewMode }) => (
-  // CHANGED: 'justify-between' -> 'justify-end' to push the buttons to the right
+  // Container: Flexbox aligned to the end (right) to push buttons to the edge.
   <div className="relative z-10 w-full max-w-[2000px] mx-auto px-4 md:px-8 mb-8 flex flex-row items-end justify-end">
     
-    {/* Removed the Text/Count Section entirely */}
-    
-    {/* Right: View Toggles (High Contrast) */}
+    {/* View Toggles Container */}
     <div className="flex items-center gap-1 bg-zinc-900/80 border border-white/10 p-1.5 rounded-xl backdrop-blur-md shadow-xl">
+      
+      {/* GRID VIEW BUTTON */}
       <button 
         onClick={() => setViewMode('grid')} 
         className={`p-3 rounded-lg transition-all duration-300 ${
@@ -20,6 +26,8 @@ const ControlBar = ({ viewMode, setViewMode }) => (
       >
         <LayoutGrid className="w-5 h-5" />
       </button>
+
+      {/* MAP VIEW BUTTON */}
       <button 
         onClick={() => setViewMode('map')} 
         className={`p-3 rounded-lg transition-all duration-300 ${
@@ -31,6 +39,7 @@ const ControlBar = ({ viewMode, setViewMode }) => (
       >
         <MapIcon className="w-5 h-5" />
       </button>
+
     </div>
 
   </div>

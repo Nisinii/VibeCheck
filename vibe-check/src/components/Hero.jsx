@@ -2,20 +2,33 @@ import React from 'react';
 import { Search } from 'lucide-react';
 import { MOODS } from '../utils/constants';
 
+// ------------------------------------------------------------------
+// COMPONENT: HERO SECTION
+// ------------------------------------------------------------------
+// Displays the main title and the search/filter controls card.
+// Props:
+// - searchQuery, setSearchQuery: Controls the text input
+// - activeMood, setActiveMood: Controls the selected vibe category
+// - radius, setRadius: Controls the distance slider
+// - budget, setBudget: Controls the cost range ($ to $$$$)
+
 const Hero = ({ 
   searchQuery, setSearchQuery, activeMood, setActiveMood, 
   radius, setRadius, budget, setBudget 
 }) => {
 
+  // Toggle specific budget levels in/out of the array
   const toggleBudget = (level) => {
     setBudget(prev => prev.includes(level) ? prev.filter(b => b !== level) : [...prev, level]);
   };
 
   return (
     <header className="relative z-10 pt-32 md:pt-48 pb-12 px-4 md:px-8 w-full max-w-[2000px] mx-auto">
+      
+      {/* MAIN GRID: Split into Text (Left) and Controls (Right) */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20 items-end">
         
-        {/* LEFT COLUMN */}
+        {/* --- LEFT COLUMN: HEADLINE & SUBTEXT --- */}
         <div className="lg:col-span-7 xl:col-span-6 text-center lg:text-left">
           <h1 className="text-6xl md:text-8xl xl:text-9xl font-black tracking-tighter text-white leading-[0.9] mb-8 drop-shadow-2xl">
             ATMOSPHERE <br />
@@ -28,17 +41,17 @@ const Hero = ({
           </p>
         </div>
         
-        {/* RIGHT COLUMN */}
+        {/* --- RIGHT COLUMN: GLASS CONTROL CARD --- */}
         <div className="lg:col-span-5 xl:col-span-6 w-full">
           
-          {/* GLASS CARD: Removed 'group' from here so hovering the card doesn't trigger buttons */}
           <div className="relative bg-black/40 backdrop-blur-2xl border border-white/10 p-6 md:p-8 rounded-[2.5rem] shadow-[0_0_50px_rgba(0,0,0,0.5)] overflow-hidden">
             
+            {/* Top Shine Effect */}
             <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
             
             <div className="space-y-8 relative z-10">
               
-              {/* 1. Search */}
+              {/* 1. SEARCH INPUT */}
               <div className="space-y-3">
                 <div className="relative group">
                   <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500 group-focus-within:text-white transition-colors w-5 h-5" />
@@ -52,8 +65,10 @@ const Hero = ({
                 </div>
               </div>
 
+              {/* 2. FILTERS ROW (Radius & Budget) */}
               <div className="grid grid-cols-2 gap-6">
-                {/* 2. Radius */}
+                
+                {/* Radius Slider */}
                 <div className="space-y-3">
                   <div className="flex justify-between items-center px-1">
                     <label className="text-[10px] uppercase font-bold tracking-widest text-zinc-400">Range</label>
@@ -67,7 +82,7 @@ const Hero = ({
                   />
                 </div>
 
-                {/* 3. Budget */}
+                {/* Budget Toggles */}
                 <div className="space-y-3">
                   <label className="text-[10px] uppercase font-bold tracking-widest text-zinc-400 block">Cost</label>
                   <div className="flex gap-1">
@@ -86,11 +101,11 @@ const Hero = ({
                     ))}
                   </div>
                 </div>
+
               </div>
 
-              {/* 4. Moods (Renamed to "Vibe") */}
+              {/* 3. VIBE SELECTOR (Previously Moods) */}
               <div className="space-y-3">
-                {/* RENAMED LABEL HERE */}
                 <label className="text-[10px] uppercase font-bold tracking-widest text-zinc-400 ml-1">Vibe</label>
                 
                 <div className="flex flex-wrap gap-2">
@@ -101,14 +116,12 @@ const Hero = ({
                       <button
                         key={mood.id}
                         onClick={() => setActiveMood(mood.id)}
-                        // ADDED 'group' HERE: Now only this button triggers the icon hover effect
                         className={`group flex items-center gap-2 px-4 py-3 rounded-xl transition-all border text-xs font-bold ${
                           isActive 
                             ? 'bg-indigo-600 border-indigo-500 text-white shadow-[0_0_20px_rgba(99,102,241,0.4)]' 
                             : 'bg-black/40 border-white/5 text-zinc-500 hover:bg-white/10 hover:text-white hover:border-white/20'
                         }`}
                       >
-                        {/* Icon responds to 'group-hover' from the button above */}
                         <Icon className={`w-3.5 h-3.5 transition-colors ${isActive ? 'text-white' : 'text-zinc-600 group-hover:text-white'}`} />
                         {mood.label}
                       </button>

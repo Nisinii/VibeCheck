@@ -5,10 +5,17 @@ import { Github, Home, Code2, Info } from 'lucide-react';
 // IMPORT YOUR LOGO
 import logoImg from '../assets/logo.png'; 
 
+// ------------------------------------------------------------------
+// COMPONENT: NAVIGATION BAR
+// ------------------------------------------------------------------
+// A responsive, sticky navbar that changes style on scroll.
+// It dynamically updates links based on the current route.
+
 const NavBar = ({ isScrolled }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  // Handle Logo Click: Scroll to top if on home, otherwise navigate home
   const handleLogoClick = () => {
     if (location.pathname === '/') {
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -17,7 +24,7 @@ const NavBar = ({ isScrolled }) => {
     }
   };
 
-  // Helper classes for consistent styling
+  // --- STYLING HELPERS ---
   const linkClass = "flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-zinc-400 hover:text-white transition-colors";
   const hiddenLinkClass = "hidden md:flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-zinc-400 hover:text-white transition-colors";
 
@@ -27,9 +34,10 @@ const NavBar = ({ isScrolled }) => {
         ? 'bg-black/50 backdrop-blur-xl border-b border-white/10 py-4' 
         : 'py-6 bg-transparent border-b border-transparent'
     }`}>
+      
       <div className="w-full max-w-[2000px] mx-auto px-4 md:px-8 flex items-center justify-between">
         
-        {/* LOGO AREA */}
+        {/* --- LEFT: LOGO AREA --- */}
         <div 
           className="flex items-center gap-3 group cursor-pointer" 
           onClick={handleLogoClick}
@@ -46,10 +54,10 @@ const NavBar = ({ isScrolled }) => {
           </div>
         </div>
         
-        {/* NAVIGATION LINKS */}
+        {/* --- RIGHT: NAVIGATION LINKS --- */}
         <div className="flex items-center gap-6 md:gap-10">
           
-          {/* SLOT 1: Shows 'Home' if not on homepage, otherwise shows 'About' */}
+          {/* SLOT 1: Context Aware (Home vs About) */}
           {(location.pathname === '/developer' || location.pathname === '/about') ? (
             <Link to="/" className={hiddenLinkClass}>
               <Home className="w-4 h-4" />
@@ -62,28 +70,28 @@ const NavBar = ({ isScrolled }) => {
             </Link>
           )}
 
-          {/* SLOT 2: Logic depends on page to ensure correct order */}
+          {/* SLOT 2: Context Aware (About vs Developer) */}
           {location.pathname === '/developer' ? (
-            // If on Developer page, Slot 2 is "About" (So order is Home -> About)
+            // If on Developer page, show About next
             <Link to="/about" className={linkClass}>
               <Info className="w-4 h-4" />
               About
             </Link>
           ) : location.pathname === '/about' ? (
-            // If on About page, Slot 2 is "Developer" (So order is Home -> Developer)
+            // If on About page, show Developer next
             <Link to="/developer" className={linkClass}>
               <Code2 className="w-4 h-4" />
               Developer
             </Link>
           ) : (
-            // If on Home page, Slot 2 is "Developer" (So order is About -> Developer)
+            // If on Home page, show Developer next
             <Link to="/developer" className={linkClass}>
               <Code2 className="w-4 h-4" />
               Developer
             </Link>
           )}
 
-          {/* GITHUB LINK (Always last) */}
+          {/* SLOT 3: GITHUB (Always Visible) */}
           <a 
             href="https://github.com/Nisinii/VibeCheck" 
             target="_blank" 
