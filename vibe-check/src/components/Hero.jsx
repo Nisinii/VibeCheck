@@ -30,7 +30,7 @@ const Hero = ({
         
         {/* --- LEFT COLUMN: HEADLINE & SUBTEXT --- */}
         <div className="lg:col-span-7 xl:col-span-6 text-center lg:text-left">
-          <h1 className="text-6xl md:text-8xl xl:text-9xl font-black tracking-tighter text-white leading-[0.9] mb-8 drop-shadow-2xl">
+          <h1 className="text-6xl md:text-8xl xl:text-8xl font-black tracking-tighter text-white leading-[0.9] mb-8 drop-shadow-2xl">
             ATMOSPHERE <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-400 to-indigo-400 animate-gradient-x">
               DECODED.
