@@ -1,6 +1,7 @@
 # VIBE CHECK. ⚡
 
-![Project Banner](https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=1000&auto=format&fit=crop)
+![Project Banner](<img width="1276" height="589" alt="image" src="https://github.com/user-attachments/assets/a50f64f4-211f-49ce-8bec-0214d5af6527" />
+)
 > **Atmosphere Decoded.** > Forget generic 5-star ratings. Discover your next destination based on how it actually feels right now.
 
 [![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://reactjs.org/)
@@ -12,7 +13,7 @@
 
 ---
 
-## 🔮 The Concept
+## The Concept
 
 **Vibe Check** is a location discovery engine that uses AI and real-time social frequency data to quantify the "vibe" of restaurants, bars, and cafes. 
 
@@ -21,19 +22,19 @@ While traditional apps focus on static star ratings, Vibe Check answers the ques
 * *"Is the lighting dim enough for a date?"*
 * *"Is the WiFi stable enough for deep work?"*
 
-## ✨ Key Features
+## Key Features
 
-* **🤖 AI Vibe Analysis:** Uses **Google Gemini** to read thousands of reviews in seconds and generate a one-sentence "Vibe Summary" (e.g., *"Neon-lit coding haven with strong espresso"*).
-* **📍 Real-Time Spatial Data:** Integrated with **Google Maps Platform (2025 SDK)** for accurate location, hours, and photos.
-* **🧊 3D Interactive Elements:** Features "Boba Bot," a custom 3D interactive mascot built with **React Three Fiber**.
-* **📊 Dynamic Filters:** Filter by Radius, Budget ($ - $$$$), and specific Moods (Chill, Electric, Buzzing).
-* **🗺️ Dual Visualization:** Toggle seamlessly between an immersive **Grid View** and an interactive **Map View**.
-* **💾 Collections:** Save your favorite spots to your local "Vibe Collection."
-* **🎨 High-Fidelity UI:** A fully responsive, dark-mode-first interface using glassmorphism and smooth framer-motion animations.
+* ** AI Vibe Analysis:** Uses **Google Gemini** to read thousands of reviews in seconds and generate a one-sentence "Vibe Summary" (e.g., *"Neon-lit coding haven with strong espresso"*).
+* ** Real-Time Spatial Data:** Integrated with **Google Maps Platform (2025 SDK)** for accurate location, hours, and photos.
+* ** 3D Interactive Elements:** Features "Boba Bot," a custom 3D interactive mascot built with **React Three Fiber**.
+* ** Dynamic Filters:** Filter by Radius, Budget ($ - $$$$), and specific Moods (Chill, Electric, Buzzing).
+* ** Dual Visualization:** Toggle seamlessly between an immersive **Grid View** and an interactive **Map View**.
+* ** Collections:** Save your favorite spots to your local "Vibe Collection."
+* ** High-Fidelity UI:** A fully responsive, dark-mode-first interface using glassmorphism and smooth framer-motion animations.
 
 ---
 
-## 🚀 Getting Started
+##  Getting Started
 
 Follow these steps to set up the project locally.
 
@@ -62,7 +63,7 @@ npm run dev
 
 Open http://localhost:5173 in your browser.
 
-## 📂 Project Structure
+## Project Structure
 ```bash
 src/
 ├── assets/          # Static images (Logo, Profile, PDF)
@@ -78,7 +79,7 @@ src/
 └── App.jsx          # Main Router configuration
 ```
 
-## 🧠 How It Works
+## How It Works
 
 ### The Vibe Engine
 The app calculates a "Vibe Score" and "Label" based on a heuristic combination of:
@@ -91,7 +92,7 @@ When you click on a place, we fetch the 5 most recent detailed reviews and send 
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 ### Frontend
 * **Framework:** React (Vite)
@@ -112,7 +113,7 @@ When you click on a place, we fetch the 5 most recent detailed reviews and send 
 
 ---
 
-## 👤 Author
+## Author
 
 **Nisini Niketha** *Software Engineer & Web Developer*
 * [GitHub](https://github.com/Nisinii)
