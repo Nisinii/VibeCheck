@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Loader2, AlertCircle, Bookmark, Zap } from 'lucide-react';
 
 // Hooks
@@ -18,6 +18,7 @@ import { API_KEY } from '../utils/constants';
 
 const Home = () => {
   const navigate = useNavigate();
+  const location = useLocation(); // ADDED: To handle navigation state from Footer
 
   // --- STATE ---
   const [activeMood, setActiveMood] = useState('all');
@@ -58,6 +59,24 @@ const Home = () => {
     return () => clearTimeout(timer);
   }, [apiReady, activeMood, searchQuery, radius, budget, fetchPlaces, showFavorites]); 
 
+  // --- ADDED: HANDLE SCROLL FROM FOOTER NAVIGATION ---
+  useEffect(() => {
+    if (location.state && location.state.scrollTo) {
+      const element = document.getElementById(location.state.scrollTo);
+      if (element) {
+        // Add a small delay to ensure DOM is ready
+        setTimeout(() => {
+          element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }, 100);
+        
+        // If the user clicked "Saved Collection", automatically switch the toggle
+        if (location.state.scrollTo === 'collection-section') {
+            setShowFavorites(true);
+        }
+      }
+    }
+  }, [location]);
+
   const totalPages = Math.ceil(allPlaces.length / ITEMS_PER_PAGE);
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const displayedPlaces = allPlaces.slice(startIndex, startIndex + ITEMS_PER_PAGE);
@@ -83,16 +102,18 @@ const Home = () => {
 
       <NavBar apiReady={apiReady} isScrolled={isScrolled} />
 
-      {/* HERO SECTION */}
-      <Hero 
-        searchQuery={searchQuery} setSearchQuery={setSearchQuery} 
-        activeMood={activeMood} setActiveMood={(mood) => { setActiveMood(mood); setShowFavorites(false); }}
-        radius={radius} setRadius={setRadius}
-        budget={budget} setBudget={setBudget}    
-      />
+      {/* HERO SECTION - Wrapped in ID for Footer Scroll Link */}
+      <div id="hero-search">
+        <Hero 
+          searchQuery={searchQuery} setSearchQuery={setSearchQuery} 
+          activeMood={activeMood} setActiveMood={(mood) => { setActiveMood(mood); setShowFavorites(false); }}
+          radius={radius} setRadius={setRadius}
+          budget={budget} setBudget={setBudget}    
+        />
+      </div>
 
-      {/* TOGGLE BUTTONS */}
-      <div className="relative z-10 w-full max-w-[2000px] mx-auto px-4 md:px-8 mb-10">
+      {/* TOGGLE BUTTONS - Added ID for Footer Scroll Link */}
+      <div id="collection-section" className="relative z-10 w-full max-w-[2000px] mx-auto px-4 md:px-8 mb-10">
         <div className="flex gap-4">
           <button 
             onClick={() => setShowFavorites(false)}
