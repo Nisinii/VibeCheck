@@ -2,9 +2,10 @@ import { Search, Coffee, Heart, Zap, DollarSign } from 'lucide-react';
 
 /**
  * API Configuration
- * NOTE: In production, use import.meta.env.VITE_GOOGLE_API_KEY
+ * NOTE: In production, use import.meta.env.VITE_GOOGLE_API_KEY and import.meta.env.GEMINI_API_KEY
  */
 export const API_KEY = "AIzaSyDNsov9a3Nx-0k4FiYIDpFd2VNwV7tco_w";
+export const GEMINI_API_KEY = "AIzaSyBCN_0Pq_194Vrrnwj50uGmC8a5gCfff0E";
 
 /**
  * Mood Definitions mapping IDs to Google Place Types
@@ -16,5 +17,3 @@ export const MOODS = [
   { id: 'quick bite', label: 'Quick Bite', icon: Zap, color: 'text-amber-500', types: ['fast_food_restaurant', 'sandwich_shop'] },
   { id: 'budget', label: 'Accessible', icon: DollarSign, color: 'text-emerald-600', types: ['restaurant'] },
 ];
-
-export const GEMINI_API_KEY = "AIzaSyBCN_0Pq_194Vrrnwj50uGmC8a5gCfff0E";
