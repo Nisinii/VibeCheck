@@ -40,7 +40,6 @@ const Hero = ({
               
               {/* 1. Search */}
               <div className="space-y-3">
-                <label className="text-[10px] uppercase font-bold tracking-widest text-zinc-400 ml-1">Search for your mood</label>
                 <div className="relative group">
                   <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500 group-focus-within:text-white transition-colors w-5 h-5" />
                   <input 
