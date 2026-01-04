@@ -115,9 +115,6 @@ When you click on a place, we fetch the 5 most recent detailed reviews and send 
 ## 👤 Author
 
 **Nisini Niketha** *Software Engineer & Web Developer*
-
-<img src="src/assets/developer.jpeg" alt="Nisini Niketha" width="100" style="border-radius: 50%;" />
-
-* 💻 [GitHub](https://github.com/Nisinii)
-* 👔 [LinkedIn](https://www.linkedin.com/in/nisini-niketha/)
-* 📧 [Contact](mailto:wnisini.niketha@gmail.com)
+* [GitHub](https://github.com/Nisinii)
+* [LinkedIn](https://www.linkedin.com/in/nisini-niketha/)
+* [Contact](mailto:wnisini.niketha@gmail.com)
