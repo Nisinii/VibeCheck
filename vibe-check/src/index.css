@@ -2,12 +2,10 @@
 
 #root {
   min-height: 100vh;
-  /* Light Slate background instead of black */
   background-color: #F8FAFC; 
-  color: #0F172A; /* Slate 900 for dark, readable text */
+  color: #0F172A;
 }
 
-/* Custom Scrollbar for Light Mode */
 ::-webkit-scrollbar {
   width: 6px;
 }
@@ -15,11 +13,10 @@
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #E2E8F0; /* Slate 200 */
+  background: #E2E8F0; 
   border-radius: 10px;
 }
 
-/* Premium Card Shadow instead of Glassmorphism */
 .premium-card {
   background: white;
   border: 1px solid #F1F5F9;
