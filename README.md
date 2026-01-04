@@ -1,6 +1,6 @@
 # VIBE CHECK. ⚡
 
-![Project Banner](<img width="1276" height="589" alt="image" src="https://github.com/user-attachments/assets/bb7fc80f-c5a4-4fcf-ad2e-17c8c4f3791f" />)
+![Project Banner](https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=1000&auto=format&fit=crop)
 > **Atmosphere Decoded.** > Forget generic 5-star ratings. Discover your next destination based on how it actually feels right now.
 
 [![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://reactjs.org/)
