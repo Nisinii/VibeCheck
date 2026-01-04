@@ -1,44 +1,40 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { 
-  Github, 
-  Linkedin, 
-  Mail, 
-  Check, 
-  MapPin, 
-  Cpu, 
-  Code2, 
-  Terminal, 
-  Globe, 
-  Palette, 
-  Layout, 
-  FileText, 
-  ArrowUpRight,
-  Database,
-  Cloud,
-  Server,
-  GraduationCap
+  Github, Linkedin, Mail, Check, MapPin, 
+  Cpu, Code2, Terminal, Globe, Palette, 
+  Layout, FileText, ArrowUpRight, Database, 
+  Cloud, Server, GraduationCap 
 } from 'lucide-react';
 
 // COMPONENTS & HOOKS
 import Footer from '../components/Footer';
-import NavBar from '../components/NavBar'; // Import NavBar
-import { useGoogleMapsScript } from '../hooks/useGoogleMaps'; // For NavBar status
-import { API_KEY } from '../utils/constants'; // API Key
+import NavBar from '../components/NavBar';
+import { useGoogleMapsScript } from '../hooks/useGoogleMaps';
+import { API_KEY } from '../utils/constants';
 
 // ASSETS
 import profileImg from '../assets/developer.jpeg';
 import resumePdf from '../assets/resume.pdf'; 
 
-const DeveloperPage = () => {
-  const navigate = useNavigate();
-  const [copied, setCopied] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false); // State for NavBar
+// ------------------------------------------------------------------
+// PAGE: DEVELOPER PROFILE
+// ------------------------------------------------------------------
+// Displays information about the creator (You).
+// Features:
+// - Hero Bio Section
+// - Tech Stack Grid
+// - Contact/Email Copy Interaction
+// - Resume Download
+// - Core Expertise Tags
 
-  // 1. Initialize Google Maps Script (So NavBar doesn't crash if it checks apiReady)
+const DeveloperPage = () => {
+  const [copied, setCopied] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  // 1. Initialize Google Maps Script (Ensures NavBar API check passes)
   const { apiReady } = useGoogleMapsScript(API_KEY);
 
-  // 2. Handle Scroll Effect for NavBar
+  // 2. Handle Scroll Effect for NavBar transparency
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
@@ -47,6 +43,7 @@ const DeveloperPage = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // 3. Handle Email Copy to Clipboard
   const handleCopyEmail = () => {
     navigator.clipboard.writeText('wnisini.niketha@gmail.com');
     setCopied(true);
@@ -56,16 +53,19 @@ const DeveloperPage = () => {
   return (
     <div className="min-h-screen bg-[#050505] text-white font-sans selection:bg-purple-500/30 overflow-x-hidden">
       
-      {/* BACKGROUND GRID */}
+      {/* ------------------------------------------------------------------
+          GLOBAL BACKGROUND
+      ------------------------------------------------------------------ */}
       <div className="fixed inset-0 h-full w-full bg-[#050505] bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none z-0"></div>
 
-      {/* REPLACED BACK BUTTON WITH NAVBAR */}
       <NavBar apiReady={apiReady} isScrolled={isScrolled} />
 
-      {/* MAIN CONTAINER */}
+      {/* ------------------------------------------------------------------
+          MAIN CONTENT CONTAINER
+      ------------------------------------------------------------------ */}
       <div className="relative z-10 w-full max-w-[2000px] mx-auto px-4 md:px-8 space-y-4 md:space-y-6 pt-32 pb-20">
         
-        {/* ROW 1: HERO (Full Width) */}
+        {/* --- SECTION 1: HERO BIO --- */}
         <div className="rounded-[2.5rem] p-8 md:p-12 border border-white/5 relative overflow-hidden group flex flex-col justify-center min-h-[600px] bg-[#0a0a0a]">
             
             {/* Background Image with Overlay */}
@@ -117,21 +117,16 @@ const DeveloperPage = () => {
                         </div>
                     </div>
                     
-                    {/* Inline Buttons */}
+                    {/* Social/Status Pills */}
                     <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4 pt-10 lg:mt-0">
-                        <div className="px-6 py-3 rounded-full bg-white/5 border border-white/10 backdrop-blur-md flex items-center gap-2 text-sm font-bold uppercase tracking-wide transition-colors cursor-default hover:bg-white/10">
-                            <MapPin size={18} className="text-indigo-400" />
-                            Gothenburg, Sweden
-                        </div>
-                        <div className="px-6 py-3 rounded-full bg-white/5 border border-white/10 backdrop-blur-md flex items-center gap-2 text-sm font-bold uppercase tracking-wide transition-colors cursor-default hover:bg-white/10">
-                            <GraduationCap size={18} className="text-purple-400" />
-                            MSc Student
-                        </div>
-                        <a href="https://github.com" target="_blank" rel="noreferrer" className="px-6 py-3 rounded-full bg-white/5 border border-white/10 backdrop-blur-md flex items-center gap-2 text-sm font-bold uppercase tracking-wide transition-colors hover:bg-white hover:text-black">
+                        <StatusPill icon={MapPin} text="Gothenburg, Sweden" color="text-indigo-400" />
+                        <StatusPill icon={GraduationCap} text="MSc Student" color="text-purple-400" />
+                        
+                        <a href="https://github.com/Nisinii" target="_blank" rel="noreferrer" className="px-6 py-3 rounded-full bg-white/5 border border-white/10 backdrop-blur-md flex items-center gap-2 text-sm font-bold uppercase tracking-wide transition-colors hover:bg-white hover:text-black">
                             <Github size={18} />
                             GitHub
                         </a>
-                        <a href="https://linkedin.com" target="_blank" rel="noreferrer" className="px-6 py-3 rounded-full bg-white/5 border border-white/10 backdrop-blur-md flex items-center gap-2 text-sm font-bold uppercase tracking-wide transition-colors hover:bg-[#0077b5] hover:text-white hover:border-[#0077b5]">
+                        <a href="https://www.linkedin.com/in/nisini-niketha/" target="_blank" rel="noreferrer" className="px-6 py-3 rounded-full bg-white/5 border border-white/10 backdrop-blur-md flex items-center gap-2 text-sm font-bold uppercase tracking-wide transition-colors hover:bg-[#0077b5] hover:text-white hover:border-[#0077b5]">
                             <Linkedin size={18} />
                             LinkedIn
                         </a>
@@ -140,10 +135,10 @@ const DeveloperPage = () => {
             </div>
         </div>
 
-        {/* ROW 2: Tech Stack & Contact */}
+        {/* --- SECTION 2: TECH & CONTACT --- */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 md:gap-6">
             
-            {/* Tech Stack Grid */}
+            {/* Tech Stack Grid (Left) */}
             <div className="lg:col-span-6 bg-[#0a0a0a] rounded-[2.5rem] p-8 md:p-12 border border-white/5 h-full min-h-[400px] flex flex-col">
                 <h3 className="font-black text-xl mb-8 flex items-center gap-3 uppercase tracking-widest text-zinc-500">
                     <Cpu size={24} className="text-indigo-500" /> Technical Arsenal
@@ -168,7 +163,7 @@ const DeveloperPage = () => {
                 </div>
             </div>
 
-            {/* Contact / CTA */}
+            {/* Contact / CTA (Right) */}
             <div className="lg:col-span-6 bg-gradient-to-br from-indigo-900/20 to-purple-900/20 rounded-[2.5rem] p-8 md:p-12 border border-indigo-500/20 flex flex-col justify-center text-center lg:text-left h-full min-h-[400px]">
                 <h3 className="font-black text-4xl md:text-5xl mb-6 tracking-tighter uppercase text-white leading-tight">
                   Let's build something <br/> <span className="text-indigo-400">extraordinary.</span>
@@ -187,7 +182,7 @@ const DeveloperPage = () => {
             </div>
         </div>
 
-        {/* ROW 3: Resume & Services */}
+        {/* --- SECTION 3: RESUME & EXPERTISE --- */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
             
             {/* Resume Download */}
@@ -207,7 +202,7 @@ const DeveloperPage = () => {
                 </div>
             </a>
             
-            {/* What I Do / Expertise */}
+            {/* Core Expertise Tags */}
             <div className="lg:col-span-2 bg-[#0a0a0a] rounded-[2.5rem] p-10 md:p-12 border border-white/5 flex flex-col justify-center h-64">
                 <h3 className="text-zinc-500 uppercase font-black tracking-widest text-sm mb-8">Core Expertise</h3>
                 <div className="flex flex-wrap gap-4">
@@ -226,5 +221,13 @@ const DeveloperPage = () => {
     </div>
   );
 };
+
+// --- HELPER COMPONENT ---
+const StatusPill = ({ icon: Icon, text, color }) => (
+    <div className="px-6 py-3 rounded-full bg-white/5 border border-white/10 backdrop-blur-md flex items-center gap-2 text-sm font-bold uppercase tracking-wide transition-colors cursor-default hover:bg-white/10">
+        <Icon size={18} className={color} />
+        {text}
+    </div>
+);
 
 export default DeveloperPage;

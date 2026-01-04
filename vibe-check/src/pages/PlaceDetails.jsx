@@ -6,13 +6,16 @@ import {
   MessageSquare, Zap, ArrowLeft, Check, Loader2
 } from 'lucide-react';
 
-// Hooks & Utils
+// HOOKS & UTILS
 import { useGoogleMapsScript } from '../hooks/useGoogleMaps';
 import { useFavorites } from '../hooks/useFavorites';
 import { generateVibeSummary } from '../utils/ai'; 
 import { API_KEY } from '../utils/constants';
 
-// Helper for static tags
+// ------------------------------------------------------------------
+// HELPER: STATIC VIBE TAGGING
+// ------------------------------------------------------------------
+// Provides an immediate visual tag based on place types before AI loads.
 const getVibeFromPlace = (place) => {
   if (!place || !place.types) return 'Classic';
   const types = place.types;
@@ -23,32 +26,50 @@ const getVibeFromPlace = (place) => {
   return 'Casual';
 };
 
+// ------------------------------------------------------------------
+// PAGE: PLACE DETAILS
+// ------------------------------------------------------------------
+// Displays full information for a specific location.
+// Features:
+// 1. Fetches deep details via Google PlacesService (Photos, Reviews, Hours)
+// 2. Triggers Gemini AI to analyze the reviews for a Vibe Summary
+// 3. Handles Sharing and Bookmarking
+
 export default function PlaceDetails() {
   const { id } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
   
-  const { isFavorite, toggleFavorite } = useFavorites();
+  // ------------------------------------------------------------------
+  // 1. STATE MANAGEMENT
+  // ------------------------------------------------------------------
   
-  // State
+  // Place Data (Initialize with navigation state if available to prevent flash)
   const [place, setPlace] = useState(location.state?.place || null);
   const [loading, setLoading] = useState(!location.state?.place);
   const [error, setError] = useState(null);
+  
+  // UI State
   const [vibeTag, setVibeTag] = useState(null);
   const [isCopied, setIsCopied] = useState(false);
   
-  // AI State
+  // AI Analysis State
   const [geminiSummary, setGeminiSummary] = useState(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
 
+  // Hooks
+  const { isFavorite, toggleFavorite } = useFavorites();
   const { apiReady } = useGoogleMapsScript(API_KEY);
 
-  // 1. Fetch Google Maps Data
+  // ------------------------------------------------------------------
+  // 2. DATA FETCHING (Google Maps)
+  // ------------------------------------------------------------------
   useEffect(() => {
     if (!apiReady || !id) return;
 
     const fetchFullDetails = () => {
       try {
+        // Use an invisible div to initialize the service (Standard JS API pattern)
         const dummyDiv = document.createElement('div');
         const service = new window.google.maps.places.PlacesService(dummyDiv);
 
@@ -82,11 +103,15 @@ export default function PlaceDetails() {
     fetchFullDetails();
   }, [apiReady, id]);
 
-  // 2. USE YOUR AI UTILITY FUNCTION
+  // ------------------------------------------------------------------
+  // 3. AI VIBE CHECK
+  // ------------------------------------------------------------------
+  // Triggers once we have the reviews from the Google API
   useEffect(() => {
     if (place?.reviews?.length > 0 && !geminiSummary && !isAnalyzing) {
       const runVibeCheck = async () => {
         setIsAnalyzing(true);
+        // Send data to utility function (Gemini API)
         const summary = await generateVibeSummary(place.name, place.reviews);
         setGeminiSummary(summary);
         setIsAnalyzing(false);
@@ -96,7 +121,9 @@ export default function PlaceDetails() {
     }
   }, [place]); 
 
-  // --- HANDLERS ---
+  // ------------------------------------------------------------------
+  // 4. HANDLERS & HELPERS
+  // ------------------------------------------------------------------
 
   const handleShare = () => {
     navigator.clipboard.writeText(window.location.href);
@@ -107,6 +134,7 @@ export default function PlaceDetails() {
   const handleBookmark = () => {
     if (!place) return;
     
+    // Convert Google Photo Object to URL string for storage
     const photoString = place.photos?.[0]?.getUrl 
       ? place.photos[0].getUrl({ maxWidth: 500, maxHeight: 400 }) 
       : null;
@@ -132,7 +160,9 @@ export default function PlaceDetails() {
     return "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&q=80&w=1200"; // Dark fallback
   };
 
-  // --- RENDER ---
+  // ------------------------------------------------------------------
+  // 5. RENDER STATES (Loading / Error)
+  // ------------------------------------------------------------------
   
   if (loading && !place) return (
     <div className="min-h-screen flex items-center justify-center bg-black">
@@ -156,14 +186,16 @@ export default function PlaceDetails() {
 
   const isFav = isFavorite(id);
 
+  // ------------------------------------------------------------------
+  // 6. MAIN RENDER
+  // ------------------------------------------------------------------
   return (
-    // DARK THEME BASE
     <div className="min-h-screen bg-black pb-20 font-sans text-zinc-100 selection:bg-indigo-500 selection:text-white">
       
-      {/* 1. HERO SECTION */}
+      {/* --- HERO IMAGE GRID --- */}
       <div className="relative w-full h-96 bg-zinc-900 group">
         
-        {/* BACK BUTTON */}
+        {/* Navigation Back Button */}
         <button 
           onClick={() => navigate(-1)} 
           className="absolute top-6 left-6 z-20 bg-black/40 backdrop-blur-md border border-white/10 p-3 rounded-full hover:bg-white hover:text-black transition-all duration-300 hover:scale-105 group-hover:opacity-100"
@@ -171,7 +203,7 @@ export default function PlaceDetails() {
           <ArrowLeft size={20} className="text-white hover:text-black transition-colors" />
         </button>
 
-        {/* PHOTO GRID */}
+        {/* Dynamic Photo Mosaic */}
         <div className="w-full h-full grid grid-cols-3 lg:grid-cols-4 grid-rows-2 gap-1 md:gap-2 opacity-90">
           <div className="col-span-2 row-span-2 relative cursor-pointer overflow-hidden">
             <img src={getPhotoUrl(0)} alt="Main" className="w-full h-full object-cover transition-transform duration-700 hover:scale-105" />
@@ -192,14 +224,16 @@ export default function PlaceDetails() {
         </div>
       </div>
 
-      {/* 2. MAIN CONTAINER */}
+      {/* --- CONTENT CONTAINER --- */}
       <div className="max-w-[1800px] mx-auto px-4 sm:px-6 lg:px-8 -mt-20 relative z-10">
         
-        {/* HEADER CARD - GLASS STYLE */}
+        {/* TITLE CARD (Glassmorphism) */}
         <div className="bg-zinc-900/60 backdrop-blur-xl border border-white/10 rounded-[2rem] shadow-2xl p-6 md:p-8 mb-8">
           <div className="flex flex-col md:flex-row justify-between items-start gap-4">
             <div>
               <h1 className="text-4xl md:text-5xl font-black tracking-tighter text-white mb-3 drop-shadow-lg">{place.name}</h1>
+              
+              {/* Metadata Badges */}
               <div className="flex items-center gap-4 text-sm text-zinc-400 flex-wrap">
                 <div className="flex items-center gap-2 bg-white/5 px-3 py-1.5 rounded-lg border border-white/5">
                   <div className="flex text-yellow-400">
@@ -225,6 +259,7 @@ export default function PlaceDetails() {
               </div>
             </div>
             
+            {/* Action Buttons */}
             <div className="flex gap-3">
               {place.url ? (
                 <a href={place.url} target="_blank" rel="noreferrer" className="flex items-center gap-2 bg-white text-black hover:bg-zinc-200 px-6 py-3 rounded-xl font-bold transition shadow-lg shadow-white/5 hover:scale-105">
@@ -247,13 +282,13 @@ export default function PlaceDetails() {
           </div>
         </div>
 
-        {/* 3. CONTENT GRID */}
+        {/* --- GRID LAYOUT (Main Content + Sidebar) --- */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           
-          {/* LEFT COLUMN (Main Content) */}
+          {/* LEFT COLUMN: Vibe & Reviews */}
           <div className="lg:col-span-2 space-y-8">
             
-            {/* VIBE ANALYSIS CARD - Dark/Neon Gradient */}
+            {/* AI VIBE ANALYSIS CARD */}
             <div className="relative overflow-hidden rounded-[2rem] p-1 bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-600 shadow-lg shadow-indigo-500/20">
               <div className="relative bg-zinc-950 rounded-[1.8rem] p-8 h-full">
                 
@@ -335,7 +370,7 @@ export default function PlaceDetails() {
             </div>
           </div>
 
-          {/* RIGHT COLUMN (Sticky Sidebar) */}
+          {/* RIGHT COLUMN: Sidebar (Contact & Hours) */}
           <div className="lg:col-span-1">
             <div className="sticky top-24 space-y-6">
               
@@ -377,6 +412,7 @@ export default function PlaceDetails() {
                   </a>
                 </div>
 
+                {/* Minimap Preview */}
                 <a href={place.url} target="_blank" rel="noreferrer" className="mt-8 block h-40 w-full rounded-2xl relative group overflow-hidden border border-white/10">
                     <img src={getPhotoUrl(4) || getPhotoUrl(0)} alt="Location" className="w-full h-full object-cover grayscale opacity-50 group-hover:grayscale-0 group-hover:opacity-80 transition duration-500" />
                     <div className="absolute inset-0 flex items-center justify-center">

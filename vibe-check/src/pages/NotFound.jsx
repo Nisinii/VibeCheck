@@ -1,7 +1,15 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Home, MapPinOff, ArrowLeft } from 'lucide-react';
-// BobaBotComponent import removed
+
+// ------------------------------------------------------------------
+// PAGE: 404 NOT FOUND
+// ------------------------------------------------------------------
+// Displayed when a user navigates to a non-existent route.
+// Features:
+// - Atmospheric "Glitch" aesthetic matching the app theme
+// - Navigation controls to return to safety
+// - Consistent background grid animations
 
 const NotFound = () => {
   const navigate = useNavigate();
@@ -9,24 +17,31 @@ const NotFound = () => {
   return (
     <div className="min-h-screen bg-[#050505] text-white font-sans selection:bg-purple-500/30 overflow-hidden relative flex flex-col items-center justify-center">
         
-        {/* 1. GLOBAL BACKGROUND */}
+        {/* ------------------------------------------------------------------
+            1. GLOBAL BACKGROUND & ATMOSPHERE
+        ------------------------------------------------------------------ */}
+        {/* Grid Pattern */}
         <div className="fixed inset-0 h-full w-full bg-[#050505] bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none z-0"></div>
         
-        {/* Ambient Glows - Slightly adjusted since bot is gone */}
+        {/* Ambient Glow (Center) */}
         <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-purple-900/10 rounded-full blur-[128px] pointer-events-none"></div>
 
-        {/* 2. MAIN CONTENT */}
+        {/* ------------------------------------------------------------------
+            2. MAIN CONTENT AREA
+        ------------------------------------------------------------------ */}
         <div className="relative z-10 text-center space-y-8 p-6 max-w-2xl w-full">
             
+            {/* Error Message & Icon */}
             <div className="space-y-6 animate-in slide-in-from-bottom-8 duration-700">
-                {/* Glitchy 404 Text - Scaled up slightly since it's the hero now */}
+                
+                {/* Glitchy 404 Text */}
                 <h1 className="text-9xl md:text-[12rem] font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white to-white/5 leading-none select-none">
                     404
                 </h1>
                 
+                {/* Subtitle Badge */}
                 <div className="flex items-center justify-center gap-4">
                     <div className="p-3 bg-white/5 rounded-xl border border-white/10">
-                        {/* CHANGED: Icon is now white */}
                         <MapPinOff className="text-white" size={24} />
                     </div>
                     <h2 className="text-3xl md:text-4xl font-black uppercase tracking-widest text-white">
@@ -34,6 +49,7 @@ const NotFound = () => {
                     </h2>
                 </div>
                 
+                {/* Description */}
                 <p className="text-zinc-400 text-lg md:text-xl max-w-lg mx-auto leading-relaxed">
                     We've scanned the sector, but this location is off the grid. It might have been deleted, moved, or never existed in this timeline.
                 </p>
@@ -59,7 +75,9 @@ const NotFound = () => {
             </div>
         </div>
         
-        {/* Footer Technical Detail */}
+        {/* ------------------------------------------------------------------
+            3. FOOTER DECORATION
+        ------------------------------------------------------------------ */}
         <div className="absolute bottom-8 text-zinc-800 text-[10px] font-mono uppercase tracking-[0.2em]">
             System Status: Signal Lost // Sector 404
         </div>
