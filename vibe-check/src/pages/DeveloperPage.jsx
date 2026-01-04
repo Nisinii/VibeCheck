@@ -1,138 +1,230 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-// FIX: Added 'Zap' to the import list below
 import { 
-  ArrowLeft, Github, Linkedin, Globe, 
-  Code2, Database, Map, Sparkles, Zap 
+  Github, 
+  Linkedin, 
+  Mail, 
+  Check, 
+  MapPin, 
+  Cpu, 
+  Code2, 
+  Terminal, 
+  Globe, 
+  Palette, 
+  Layout, 
+  FileText, 
+  ArrowUpRight,
+  Database,
+  Cloud,
+  Server,
+  GraduationCap
 } from 'lucide-react';
-import Footer from '../components/Footer';
 
-// PLACEHOLDER IMAGE: Replace this with your own photo later
-const profileImg = "https://images.unsplash.com/photo-1568602471122-7832951cc4c5?auto=format&fit=crop&q=80&w=800&h=800";
+// COMPONENTS & HOOKS
+import Footer from '../components/Footer';
+import NavBar from '../components/NavBar'; // Import NavBar
+import { useGoogleMapsScript } from '../hooks/useGoogleMaps'; // For NavBar status
+import { API_KEY } from '../utils/constants'; // API Key
+
+// ASSETS
+import profileImg from '../assets/developer.jpeg';
+import resumePdf from '../assets/resume.pdf'; 
 
 const DeveloperPage = () => {
   const navigate = useNavigate();
+  const [copied, setCopied] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false); // State for NavBar
+
+  // 1. Initialize Google Maps Script (So NavBar doesn't crash if it checks apiReady)
+  const { apiReady } = useGoogleMapsScript(API_KEY);
+
+  // 2. Handle Scroll Effect for NavBar
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const handleCopyEmail = () => {
+    navigator.clipboard.writeText('wnisini.niketha@gmail.com');
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   return (
-    <div className="min-h-screen bg-slate-50 font-sans text-slate-900 selection:bg-indigo-100">
+    <div className="min-h-screen bg-[#050505] text-white font-sans selection:bg-purple-500/30 overflow-x-hidden">
       
-      {/* Floating Back Button */}
-      <button 
-        onClick={() => navigate('/')} 
-        className="fixed top-6 left-6 z-30 bg-white/90 backdrop-blur-md p-3 rounded-full shadow-lg border border-slate-100 hover:bg-white hover:scale-105 transition-all group"
-        aria-label="Back to App"
-      >
-        <ArrowLeft size={20} className="text-slate-700 group-hover:-translate-x-1 transition-transform" />
-      </button>
+      {/* BACKGROUND GRID */}
+      <div className="fixed inset-0 h-full w-full bg-[#050505] bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none z-0"></div>
 
-      <main className="max-w-5xl mx-auto px-6 md:px-12 py-24 md:py-32 relative">
+      {/* REPLACED BACK BUTTON WITH NAVBAR */}
+      <NavBar apiReady={apiReady} isScrolled={isScrolled} />
+
+      {/* MAIN CONTAINER */}
+      <div className="relative z-10 w-full max-w-[2000px] mx-auto px-4 md:px-8 space-y-4 md:space-y-6 pt-32 pb-20">
         
-        {/* SECTION 1: THE DEVELOPER */}
-        <section className="grid grid-cols-1 md:grid-cols-12 gap-12 items-center mb-32">
-          
-          {/* Text Content */}
-          <div className="md:col-span-7 space-y-8 order-2 md:order-1">
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-50 border border-indigo-100 rounded-full text-xs font-bold text-indigo-600 uppercase tracking-widest">
-              <Code2 size={16} /> The Creator
-            </div>
+        {/* ROW 1: HERO (Full Width) */}
+        <div className="rounded-[2.5rem] p-8 md:p-12 border border-white/5 relative overflow-hidden group flex flex-col justify-center min-h-[600px] bg-[#0a0a0a]">
             
-            <div>
-              <h1 className="text-5xl md:text-7xl font-black tracking-tight mb-4">
-                Hi, I'm <span className="text-indigo-600">John Doe</span>.
-              </h1>
-              <h2 className="text-2xl md:text-3xl text-slate-500 font-medium">
-                Frontend Engineer & UI Designer.
-              </h2>
+            {/* Background Image with Overlay */}
+            <div className="absolute inset-0 z-0">
+                <img 
+                    src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=2670&auto=format&fit=crop" 
+                    alt="Programming Background" 
+                    className="w-full h-full object-cover opacity-40 transition-transform duration-700 group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-r from-black via-black/80 to-black/50"></div>
             </div>
 
-            <p className="text-slate-600 leading-relaxed text-lg max-w-2xl">
-              I build pixel-perfect, user-centric digital experiences. I'm obsessed with clean code, modern aesthetics, and finding the intersection between complex data and intuitive design.
-              <br /><br />
-              Based in Stockholm. Always building.
-            </p>
+            <div className="relative z-10 flex flex-col lg:flex-row gap-12 lg:gap-20 items-center lg:items-stretch h-full">
+                
+                {/* Profile Picture */}
+                <div className="shrink-0 relative lg:w-[450px] flex items-center justify-center">
+                   <div className="w-72 h-72 md:w-96 md:h-96 rounded-[2.5rem] border-4 border-white/5 overflow-hidden shadow-2xl bg-black transform rotate-3 hover:rotate-0 transition-transform duration-500 ease-out">
+                       <img 
+                         src={profileImg} 
+                         alt="Nisini Niketha" 
+                         className="w-full h-full object-cover"
+                       />
+                   </div>
+                </div>
 
-            {/* Social Links */}
-            <div className="flex flex-wrap gap-4 pt-2">
-              <SocialButton icon={Github} link="#" label="GitHub" />
-              <SocialButton icon={Linkedin} link="#" label="LinkedIn" />
-              <SocialButton icon={Globe} link="#" label="Portfolio" />
+                {/* Text Content */}
+                <div className="flex-1 flex flex-col justify-center lg:justify-between text-center lg:text-left w-full py-2">
+                    <div>
+                        <h1 className="text-5xl md:text-7xl xl:text-8xl font-black mb-6 leading-[0.9] tracking-tighter text-white drop-shadow-lg uppercase">
+                        HI, I'M <br/>
+                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-500">
+                            NISINI NIKETHA.
+                        </span>
+                        </h1>
+                        
+                        <div className="space-y-8 w-full">
+                            <h2 className="text-2xl md:text-3xl font-bold text-zinc-400">
+                            Software Engineer & Web Developer.
+                            </h2>
+                            
+                            <div className="text-zinc-300 text-lg md:text-xl leading-relaxed font-light space-y-4">
+                            <p>
+                                I build pixel-perfect, user-centric digital experiences. I'm obsessed with clean code, modern aesthetics, and finding the intersection between complex data and intuitive design.
+                            </p>
+                            <p>
+                                Currently pursuing my <span className="text-white font-semibold">Master's in Software Engineering & Management</span> at the <span className="text-white font-semibold">University of Gothenburg</span>. My research focuses on AI-driven UI adaptation and scalable cloud architectures.
+                            </p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    {/* Inline Buttons */}
+                    <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4 pt-10 lg:mt-0">
+                        <div className="px-6 py-3 rounded-full bg-white/5 border border-white/10 backdrop-blur-md flex items-center gap-2 text-sm font-bold uppercase tracking-wide transition-colors cursor-default hover:bg-white/10">
+                            <MapPin size={18} className="text-indigo-400" />
+                            Gothenburg, Sweden
+                        </div>
+                        <div className="px-6 py-3 rounded-full bg-white/5 border border-white/10 backdrop-blur-md flex items-center gap-2 text-sm font-bold uppercase tracking-wide transition-colors cursor-default hover:bg-white/10">
+                            <GraduationCap size={18} className="text-purple-400" />
+                            MSc Student
+                        </div>
+                        <a href="https://github.com" target="_blank" rel="noreferrer" className="px-6 py-3 rounded-full bg-white/5 border border-white/10 backdrop-blur-md flex items-center gap-2 text-sm font-bold uppercase tracking-wide transition-colors hover:bg-white hover:text-black">
+                            <Github size={18} />
+                            GitHub
+                        </a>
+                        <a href="https://linkedin.com" target="_blank" rel="noreferrer" className="px-6 py-3 rounded-full bg-white/5 border border-white/10 backdrop-blur-md flex items-center gap-2 text-sm font-bold uppercase tracking-wide transition-colors hover:bg-[#0077b5] hover:text-white hover:border-[#0077b5]">
+                            <Linkedin size={18} />
+                            LinkedIn
+                        </a>
+                    </div>
+                </div>
             </div>
-          </div>
+        </div>
 
-          {/* Image */}
-          <div className="md:col-span-5 order-1 md:order-2 relative group">
-            <div className="absolute inset-0 bg-gradient-to-tr from-indigo-600 to-purple-400 rounded-[3rem] rotate-6 scale-105 opacity-20 blur-2xl group-hover:rotate-12 group-hover:scale-110 transition-transform duration-700"></div>
-            <img 
-              src={profileImg} 
-              alt="Developer" 
-              className="rounded-[3rem] shadow-2xl border-4 border-white relative z-10 object-cover aspect-square w-full grayscale group-hover:grayscale-0 transition-all duration-700" 
-            />
-          </div>
-        </section>
+        {/* ROW 2: Tech Stack & Contact */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 md:gap-6">
+            
+            {/* Tech Stack Grid */}
+            <div className="lg:col-span-6 bg-[#0a0a0a] rounded-[2.5rem] p-8 md:p-12 border border-white/5 h-full min-h-[400px] flex flex-col">
+                <h3 className="font-black text-xl mb-8 flex items-center gap-3 uppercase tracking-widest text-zinc-500">
+                    <Cpu size={24} className="text-indigo-500" /> Technical Arsenal
+                </h3>
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 flex-1">
+                   {[
+                     { name: "React", icon: <Code2 size={20}/> },
+                     { name: "Node.js", icon: <Terminal size={20}/> },
+                     { name: "TypeScript", icon: <Code2 size={20}/> },
+                     { name: "Next.js", icon: <Globe size={20}/> },
+                     { name: "Tailwind", icon: <Palette size={20}/> },
+                     { name: "Figma", icon: <Layout size={20}/> },
+                     { name: "PostgreSQL", icon: <Database size={20}/> },
+                     { name: "AWS", icon: <Cloud size={20}/> },
+                     { name: "Docker", icon: <Server size={20}/> },
+                   ].map((tech, i) => (
+                     <div key={i} className="flex flex-col items-center justify-center gap-3 p-4 rounded-2xl bg-white/5 hover:bg-white/10 transition-colors cursor-default border border-white/5 group h-full">
+                        <span className="text-zinc-400 group-hover:text-white transition-colors group-hover:scale-110 transform duration-300">{tech.icon}</span>
+                        <span className="text-xs font-bold text-zinc-300 uppercase tracking-wide group-hover:text-white transition-colors">{tech.name}</span>
+                     </div>
+                   ))}
+                </div>
+            </div>
 
+            {/* Contact / CTA */}
+            <div className="lg:col-span-6 bg-gradient-to-br from-indigo-900/20 to-purple-900/20 rounded-[2.5rem] p-8 md:p-12 border border-indigo-500/20 flex flex-col justify-center text-center lg:text-left h-full min-h-[400px]">
+                <h3 className="font-black text-4xl md:text-5xl mb-6 tracking-tighter uppercase text-white leading-tight">
+                  Let's build something <br/> <span className="text-indigo-400">extraordinary.</span>
+                </h3>
+                <p className="text-indigo-200/70 text-lg md:text-xl mb-10 max-w-xl mx-auto lg:mx-0 leading-relaxed font-light">
+                  I'm currently open to new opportunities and collaborations. Whether you have a project in mind or just want to chat about the future of tech, my inbox is always open.
+                </p>
+                
+                <button 
+                  onClick={handleCopyEmail}
+                  className="w-full md:w-auto py-5 px-10 bg-indigo-600 hover:bg-indigo-500 rounded-2xl font-bold transition-all active:scale-95 flex items-center justify-center gap-3 text-white shadow-[0_0_30px_rgba(79,70,229,0.3)] tracking-wide uppercase text-sm group"
+                >
+                  {copied ? <Check size={20} /> : <Mail size={20} className="group-hover:-rotate-12 transition-transform"/>}
+                  {copied ? 'Email Copied!' : 'Copy Email Address'}
+                </button>
+            </div>
+        </div>
 
-        {/* SECTION 2: THE PROJECT */}
-        <section>
-           <div className="text-center mb-16">
-             <h3 className="text-3xl font-black mb-4">About The Project.</h3>
-             <p className="text-slate-500 text-lg max-w-2xl mx-auto">
-               "Vibe Check" was created to solve the problem of generic 5-star ratings. It uses modern tech to decode the atmosphere of a place before you arrive.
-             </p>
-           </div>
+        {/* ROW 3: Resume & Services */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
+            
+            {/* Resume Download */}
+            <a 
+              href={resumePdf} 
+              download="Nisini_Niketha_Resume.pdf"
+              className="lg:col-span-1 bg-[#0a0a0a] rounded-[2.5rem] p-10 border border-white/5 flex flex-col justify-between hover:border-purple-500/30 transition-all cursor-pointer h-64"
+            >
+                <div className="w-16 h-16 bg-white/5 rounded-2xl flex items-center justify-center text-purple-400 mb-4">
+                   <FileText size={32} />
+                </div>
+                <div>
+                   <p className="text-sm text-zinc-500 uppercase font-black tracking-widest mb-2">Resume</p>
+                   <div className="font-black text-2xl flex items-center gap-2 text-white">
+                      View My Resume <ArrowUpRight size={24}/>
+                   </div>
+                </div>
+            </a>
+            
+            {/* What I Do / Expertise */}
+            <div className="lg:col-span-2 bg-[#0a0a0a] rounded-[2.5rem] p-10 md:p-12 border border-white/5 flex flex-col justify-center h-64">
+                <h3 className="text-zinc-500 uppercase font-black tracking-widest text-sm mb-8">Core Expertise</h3>
+                <div className="flex flex-wrap gap-4">
+                   {['Frontend Architecture', 'UI/UX Design', 'Full Stack Development', 'Cloud Infrastructure', 'API Design', 'AI Integration'].map(item => (
+                       <span key={item} className="px-6 py-3 rounded-2xl bg-white/5 border border-white/5 text-sm font-bold text-zinc-300 hover:bg-white hover:text-black transition-all cursor-default">
+                           {item}
+                       </span>
+                   ))}
+                </div>
+            </div>
+        </div>
 
-           <div className="bg-white border border-slate-200 rounded-[3rem] p-8 md:p-16 shadow-xl shadow-slate-200/50 relative overflow-hidden">
-             <Sparkles className="absolute -right-12 -top-12 text-indigo-50 w-80 h-80 -rotate-12 pointer-events-none" />
-             
-             <div className="relative z-10 grid grid-cols-1 md:grid-cols-3 gap-8">
-                 {/* This was likely where the error occurred because Zap wasn't imported */}
-                 <TechCard 
-                   icon={Zap} 
-                   title="Modern Stack" 
-                   desc="Built for speed with React, Vite, and Tailwind CSS. State management via React Hooks." 
-                 />
-                 <TechCard 
-                   icon={Map} 
-                   title="Google Maps (New)" 
-                   desc="Leveraging the latest Places Library (v3) for semantic search and rich location data." 
-                 />
-                 <TechCard 
-                   icon={Database} 
-                   title="AI Powered" 
-                   desc="Integrated Gemini AI to synthesize hundreds of reviews into concise 'vibe summaries'." 
-                 />
-             </div>
-           </div>
-        </section>
-      </main>
+      </div>
 
       <Footer />
     </div>
   );
 };
-
-// Helper Components
-const SocialButton = ({ icon: Icon, link, label }) => (
-  <a 
-    href={link} 
-    target="_blank" 
-    rel="noopener noreferrer"
-    className="flex items-center gap-3 pl-4 pr-6 py-3 bg-white border border-slate-200 rounded-2xl font-bold text-slate-600 hover:text-indigo-600 hover:border-indigo-200 hover:shadow-md transition-all group"
-  >
-    <Icon size={20} className="text-slate-400 group-hover:text-indigo-500 transition-colors" />
-    {label}
-  </a>
-);
-
-const TechCard = ({ icon: Icon, title, desc }) => (
-  <div className="bg-slate-50/50 border border-slate-100 p-8 rounded-3xl hover:bg-indigo-50/50 hover:border-indigo-100 transition-colors group">
-    <div className="bg-white p-3 rounded-2xl inline-block shadow-sm mb-6 group-hover:scale-110 transition-transform">
-      <Icon size={24} className="text-indigo-600" />
-    </div>
-    <h4 className="text-xl font-black text-slate-900 mb-3">{title}</h4>
-    <p className="text-slate-500 font-medium leading-relaxed text-sm">
-      {desc}
-    </p>
-  </div>
-);
 
 export default DeveloperPage;
