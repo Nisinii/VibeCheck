@@ -1,4 +1,4 @@
-# VIBE CHECK. ⚡
+# VIBE CHECK.
 
 ![Project Banner](https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=1000&auto=format&fit=crop)
 > **Atmosphere Decoded.** > Forget generic 5-star ratings. Discover your next destination based on how it actually feels right now.
@@ -17,19 +17,19 @@
 **Vibe Check** is a location discovery engine that uses AI and real-time social frequency data to quantify the "vibe" of restaurants, bars, and cafes. 
 
 While traditional apps focus on static star ratings, Vibe Check answers the questions that actually matter: 
-* *"Is it loud enough to hide an awkward silence?"*
-* *"Is the lighting dim enough for a date?"*
-* *"Is the WiFi stable enough for deep work?"*
+* "Is it loud enough to hide an awkward silence?"
+* "Is the lighting dim enough for a date?"
+* "Is the WiFi stable enough for deep work?"
 
 ## Key Features
 
-* ** AI Vibe Analysis:** Uses **Google Gemini** to read thousands of reviews in seconds and generate a one-sentence "Vibe Summary" (e.g., *"Neon-lit coding haven with strong espresso"*).
-* ** Real-Time Spatial Data:** Integrated with **Google Maps Platform (2025 SDK)** for accurate location, hours, and photos.
-* ** 3D Interactive Elements:** Features "Boba Bot," a custom 3D interactive mascot built with **React Three Fiber**.
-* ** Dynamic Filters:** Filter by Radius, Budget ($ - $$$$), and specific Moods (Chill, Electric, Buzzing).
-* ** Dual Visualization:** Toggle seamlessly between an immersive **Grid View** and an interactive **Map View**.
-* ** Collections:** Save your favorite spots to your local "Vibe Collection."
-* ** High-Fidelity UI:** A fully responsive, dark-mode-first interface using glassmorphism and smooth framer-motion animations.
+* AI Vibe Analysis: Uses **Google Gemini** to read thousands of reviews in seconds and generate a one-sentence "Vibe Summary" (e.g., "Neon-lit coding haven with strong espresso").
+* Real-Time Spatial Data: Integrated with **Google Maps Platform (2025 SDK)** for accurate location, hours, and photos.
+* 3D Interactive Elements: Features "Boba Bot," a custom 3D interactive mascot built with **React Three Fiber**.
+* Dynamic Filters: Filter by Radius, Budget ($ - $$$$), and specific Moods (Chill, Electric, Buzzing).
+* Dual Visualization: Toggle seamlessly between an immersive **Grid View** and an interactive **Map View**.
+* Collections: Save your favorite spots to your local "Vibe Collection."
+* High-Fidelity UI: A fully responsive, dark-mode-first interface using glassmorphism and smooth framer-motion animations.
 
 ---
 
