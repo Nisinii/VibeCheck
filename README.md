@@ -114,6 +114,7 @@ When you click on a place, we fetch the 5 most recent detailed reviews and send 
 * **Google Generative AI SDK** (Gemini Model)
 * **LocalStorage** (Persistence for favorites)
 
+#### Check out the Live Demo at: https://youtu.be/Q5_OjNSry3w
 ---
 
 ## Author
