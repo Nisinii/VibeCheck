@@ -1,4 +1,5 @@
 # VIBE CHECK.
+<img width="1335" height="856" alt="image 1" src="https://github.com/user-attachments/assets/a6917c60-711d-4738-94e4-16c5645a0615" />
 
 > **Atmosphere Decoded.** > Forget generic 5-star ratings. Discover your next destination based on how it actually feels right now.
 
@@ -20,6 +21,10 @@ While traditional apps focus on static star ratings, Vibe Check answers the ques
 * "Is the lighting dim enough for a date?"
 * "Is the WiFi stable enough for deep work?"
 
+<img width="1336" height="849" alt="image 2" src="https://github.com/user-attachments/assets/604ae11c-a642-4b13-a344-a191bcf89a94" />
+<img width="1336" height="855" alt="image 3" src="https://github.com/user-attachments/assets/830ceea7-3383-46e1-bce3-7239466154c8" />
+<img width="1332" height="854" alt="image 4" src="https://github.com/user-attachments/assets/6c4782e4-677d-4dc2-891f-b68f1a4ff40e" />
+
 ## Key Features
 
 * AI Vibe Analysis: Uses **Google Gemini** to read thousands of reviews in seconds and generate a one-sentence "Vibe Summary" (e.g., "Neon-lit coding haven with strong espresso").
@@ -38,7 +43,7 @@ Follow these steps to set up the project locally.
 
 ### 1. Clone the repository
 ```bash
-git clone [https://github.com/Nisinii/VibeCheck.git](https://github.com/Nisinii/VibeCheck.git)
+git clone https://github.com/Nisinii/VibeCheck.git
 cd VibeCheck
 ```
 
