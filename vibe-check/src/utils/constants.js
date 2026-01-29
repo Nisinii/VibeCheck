@@ -4,8 +4,8 @@ import { Search, Coffee, Heart, Zap, DollarSign } from 'lucide-react';
  * API Configuration
  * NOTE: In production, use import.meta.env.VITE_GOOGLE_API_KEY and import.meta.env.GEMINI_API_KEY
  */
-export const API_KEY = "AIzaSyDNsov9a3Nx-0k4FiYIDpFd2VNwV7tco_w";
-export const GEMINI_API_KEY = "AIzaSyBCN_0Pq_194Vrrnwj50uGmC8a5gCfff0E";
+export const API_KEY = "GOOGLE_API_KEY";
+export const GEMINI_API_KEY = "GEMINI_API_KEY";
 
 /**
  * Mood Definitions mapping IDs to Google Place Types
